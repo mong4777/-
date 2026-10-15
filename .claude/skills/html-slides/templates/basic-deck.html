@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="HTML 슬라이드 견본 덱 · 스킬 1">
+<title>견본 덱 · 교육 발표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@600;700;900&display=swap">
+<style>
+/* ─────────────────────────────────────────────────────────
+   HTML 슬라이드 견본 덱 · 스킬 1(html-slides)
+   · 한 장 = 한 화면(100vh) · ← → · 스페이스 · 오른쪽 위 ‹ › 넘김 · 「차례」 · 「글자 ＋/−」 · 「띠 숨기기」(H)
+   · 바꾸는 자리: ①:root 색 ②<section class="slide"> 본문 ③맨 아래 store 열쇠 이름(my-deck.zoom)
+───────────────────────────────────────────────────────── */
+:root{
+  --paper:#f7f1e6; --paper-2:#efe5d4; --card:#fbf7ef;
+  --ink:#2b231f; --muted:#6b5a50; --faint:#a08f82; --hair:#dccbb4;
+  --wine:#7b2d35; --wine-soft:#f0dfdc;
+  --gold:#b0842e; --gold-soft:#f4e7c9;
+  --green:#2f5d4e; --green-soft:#dfe9e2;
+  --red:#b23a2e;
+  --serif:"Noto Serif KR","Apple SD Gothic Neo","Malgun Gothic",serif;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",sans-serif;
+  --num:"Noto Sans KR","Consolas",monospace;
+  --zoom:1;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{font-size:calc(clamp(12px, min(1.12vw, 1.98vh), 24px) * var(--zoom));scroll-snap-type:y mandatory;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all;
+  background:
+    radial-gradient(60vw 60vh at 85% -10%, rgba(176,132,46,.22), transparent 60%),
+    radial-gradient(50vw 50vh at -10% 110%, rgba(123,45,53,.14), transparent 60%),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  background-attachment:fixed}
+::selection{background:var(--wine);color:#fff}
+a{color:inherit}
+.lbl{font-size:.72rem;letter-spacing:.16em;color:var(--faint);font-weight:700;text-transform:uppercase}
+.tnum{font-family:var(--num);font-variant-numeric:tabular-nums}
+/* ── 위 띠 ── */
+.top{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 3vw .7rem;font-size:.78rem;color:var(--faint);letter-spacing:.06em;pointer-events:none;
+  background:linear-gradient(180deg, var(--paper) 55%, rgba(247,241,230,0))}
+.top b{color:var(--wine);font-weight:700;letter-spacing:.02em}
+.top .now{color:var(--muted)}
+/* ── 장 ── */
+.slide{height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:center;
+  padding:4rem 6vw 4.2rem;overflow:hidden;position:relative}
+.slide>*{flex:none}
+.s-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.1rem}
+.s-head .n{font-family:var(--serif);font-size:1rem;color:var(--gold);font-weight:700;letter-spacing:.1em}
+.s-head .line{flex:1;height:1px;background:var(--hair)}
+.s-head .t{font-size:.8rem;color:var(--faint);letter-spacing:.1em}
+h1,h2{font-family:var(--serif);margin:0;color:var(--wine);letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
+h2{font-size:2.6rem;font-weight:900;margin-bottom:1.4rem}
+.tight h2{font-size:2.2rem;margin-bottom:.9rem}.tight .s-head{margin-bottom:.6rem}
+h2 small{font-size:1rem;color:var(--faint);font-family:var(--sans);font-weight:500;margin-left:.6rem}
+h3{font-family:var(--sans);font-size:1rem;letter-spacing:.06em;color:var(--gold);margin:0 0 .6rem;font-weight:900}
+/* 표지 · 간지 */
+.cover{padding-left:8vw}
+.cover .lbl{color:var(--gold);margin-bottom:1.6rem;font-size:.9rem}
+.cover h1{font-size:5.2rem;font-weight:900;margin-bottom:1.4rem}
+.cover .lede{font-size:1.45rem;color:var(--muted);max-width:36em;margin:0 0 2.6rem;line-height:1.7}
+.meta{display:flex;gap:3.4rem;flex-wrap:wrap}
+.meta b{display:block;font-family:var(--serif);font-size:2.2rem;color:var(--ink);font-weight:700;line-height:1.1;margin-bottom:.35rem}
+.meta .lbl{text-transform:none;letter-spacing:.08em}
+.cover::after{content:"";position:absolute;right:6vw;top:14vh;bottom:14vh;width:1px;background:linear-gradient(180deg,transparent,var(--gold),transparent);opacity:.7}
+.divider{align-items:center;text-align:center}
+.divider .lbl{color:var(--gold);font-size:.95rem;margin-bottom:1.2rem}
+.divider h1{font-size:4.6rem;font-weight:900}
+.divider .sub{font-size:1.4rem;margin-top:1.4rem}
+/* 큰 글 상자 */
+.big{font-size:1.9rem;font-weight:700;line-height:1.6;margin:0 0 1.6rem;letter-spacing:-.015em;color:var(--ink)}
+.big.q{padding-left:1.2rem;border-left:5px solid var(--wine)}
+.big.q b{color:var(--wine);font-family:var(--serif);font-size:1.15em}
+.big.q span{display:block;font-size:.78em;font-weight:500;color:var(--muted);margin-top:.35rem}
+ul.pts{list-style:none;margin:0;padding:0}
+ul.pts li{font-size:1.65rem;line-height:1.7;padding:.6rem 0 .6rem 1.9rem;position:relative}
+ul.pts li::before{content:"";position:absolute;left:.3rem;top:1.25em;width:.55rem;height:.55rem;border-radius:50%;background:var(--gold)}
+ul.pts li b{color:var(--wine);font-weight:900}
+.sub{font-size:1.15rem;color:var(--muted);margin:1.2rem 0 0;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:.55rem}
+.chips span{font-size:1.2rem;font-weight:700;padding:.45rem 1.1rem;border-radius:999px;background:var(--gold-soft);color:#6f5115;line-height:1.3}
+.chips.wine span{background:var(--wine-soft);color:var(--wine)}
+.chips.green span{background:var(--green-soft);color:var(--green)}
+/* 두 단 */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4vw;align-items:start}
+.two.narrow-r{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+/* 라벨·값 표 */
+.ov{display:grid;gap:0}
+.ov-row{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:1.6rem;align-items:start;padding:1.05rem 0;border-top:1px solid var(--hair)}
+.ov-row:first-child{border-top:0}
+.ov-k{font-family:var(--serif);font-size:1.3rem;font-weight:900;color:var(--gold);letter-spacing:.02em;padding-top:.1rem}
+.ov-v{font-size:1.55rem;font-weight:700;line-height:1.7;color:var(--ink)}
+.ov-v span{display:block;font-size:.72em;font-weight:500;color:var(--muted)}
+/* 개념 한 장 — 왼쪽 뜻·비유, 오른쪽 시연 상자 */
+.concept .big{font-size:2.1rem;margin-bottom:1.2rem}
+.pair{display:grid;grid-template-columns:7rem minmax(0,1fr);gap:1.2rem;align-items:baseline;padding:.9rem 0;border-top:1px solid var(--hair)}
+.pair:first-of-type{border-top:0}
+.pair .k{font-size:.8rem;letter-spacing:.14em;color:var(--gold);font-weight:900}
+.pair .v{font-size:1.5rem;line-height:1.55;font-weight:700}
+.pair .v span{display:block;font-size:.72em;font-weight:400;color:var(--muted);margin-top:.3rem}
+.demo{background:var(--card);border:1px solid var(--hair);border-top:.5rem solid var(--green);border-radius:1rem;padding:1.4rem 1.6rem}
+.demo h3{color:var(--green)}
+.demo .ask{font-family:var(--serif);font-size:1.6rem;font-weight:700;line-height:1.5;color:var(--ink);margin:0 0 .8rem;padding:.8rem 1rem;background:var(--paper);border-radius:.6rem}
+.demo .ask::before{content:"〉 ";color:var(--green)}
+.demo p{margin:0;font-size:1.1rem;color:var(--muted);line-height:1.6}
+/* 따라 하기 — 큰 번호 단계 */
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:st}
+ol.steps li{counter-increment:st;display:grid;grid-template-columns:2.6rem minmax(0,1fr);gap:.9rem;align-items:start;padding:.45rem 0;border-top:1px solid var(--hair)}
+ol.steps li:first-child{border-top:0}
+ol.steps li::before{content:counter(st);font-family:var(--serif);font-size:1.6rem;font-weight:900;color:var(--gold);line-height:1;padding-top:.15rem}
+ol.steps li b{display:block;font-size:1.28rem;font-weight:900;line-height:1.35;color:var(--ink)}
+ol.steps li span{display:block;grid-column:2;font-size:.95rem;color:var(--muted);margin-top:-.1rem;line-height:1.5}
+ol.steps li code{font-family:var(--num);font-size:.95em;background:var(--gold-soft);color:#6f5115;padding:.1rem .5rem;border-radius:.35rem;font-weight:700}
+.card{background:var(--card);border:1px solid var(--hair);border-top:.5rem solid var(--wine);border-radius:1rem;padding:1rem 1.3rem}
+.card.green{border-top-color:var(--green)}
+.card.gold{border-top-color:var(--gold)}
+.card h3{font-family:var(--serif);font-size:1.45rem;color:var(--wine);letter-spacing:-.01em;margin-bottom:.5rem}
+.card.green h3{color:var(--green)}
+/* 세 갈래 카드 */
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem}
+.three .card p{margin:0 0 .6rem;font-size:1.2rem;line-height:1.6}
+.three .card .no{font-size:.8rem;letter-spacing:.14em;color:var(--gold);font-weight:900}
+.three .card .out{font-size:1.05rem;color:var(--muted);border-top:1px solid var(--hair);padding-top:.6rem;margin-top:.6rem}
+/* 지시문 장 */
+.prompt{background:var(--card);border:1px solid var(--hair);border-left:.6rem solid var(--green);border-radius:1rem;padding:1.4rem 1.8rem;position:relative}
+.prompt p{font-family:var(--serif);font-size:1.45rem;line-height:1.75;margin:0;color:var(--ink);white-space:pre-line}
+.prompt .blank{background:var(--gold-soft);color:#6f5115;padding:0 .4rem;border-radius:.3rem;font-weight:900}
+.prompt.gold{border-left-color:var(--gold)}
+.prompt.gold .copy{background:var(--gold)}
+.outline{list-style:none;margin:.4rem 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.25rem 1.2rem;font-size:1.05rem;color:var(--muted)}
+.prompt .copy{position:absolute;right:1.2rem;top:-1.1rem;font-family:inherit;font-size:1rem;font-weight:900;border:0;border-radius:999px;padding:.55rem 1.3rem;background:var(--green);color:#fff;cursor:pointer;box-shadow:0 .5rem 1.2rem -.6rem rgba(47,93,78,.7)}
+.prompt .copy:hover{background:#244a3e}
+.prompt .copy.ok{background:var(--gold)}
+.how{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:1.2rem}
+.how span{font-size:1.05rem;color:var(--muted)}
+.how span b{color:var(--wine)}
+/* 주의 셋 — 큰 숫자 */
+.warn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem}
+.warn .w{background:var(--card);border:1px solid var(--hair);border-radius:1rem;padding:1.4rem 1.5rem 1.3rem;border-top:.6rem solid var(--red)}
+.warn .w b{display:block;font-family:var(--serif);font-size:2rem;color:var(--red);font-weight:900;line-height:1.2;margin-bottom:.6rem}
+.warn .w p{margin:0;font-size:1.2rem;line-height:1.6}
+table{width:100%;border-collapse:collapse;font-size:1.15rem}
+th,td{text-align:left;padding:.7rem 1rem .7rem 0;border-bottom:1px solid var(--hair);vertical-align:top;line-height:1.45}
+th{font-size:.74rem;letter-spacing:.14em;color:var(--gold);font-weight:900}
+td:first-child{color:var(--wine);font-weight:900;white-space:nowrap}
+/* 퀴즈 — 큰 질문 · O X · 「정답 보기」 */
+.quiz .big.q{font-size:2.4rem;line-height:1.5}
+.ox{display:flex;gap:2.4rem;margin:1.2rem 0 1.4rem}
+.ox span{font-family:var(--serif);font-size:5rem;font-weight:900;line-height:1;color:var(--faint);width:7rem;height:7rem;border:3px solid var(--hair);border-radius:50%;display:grid;place-items:center;background:var(--card)}
+.ox span.on{color:#fff;background:var(--wine);border-color:var(--wine)}
+.ox span.x.on{background:var(--green);border-color:var(--green)}
+ol.choice{list-style:none;margin:0 0 1.2rem;padding:0;counter-reset:ch}
+ol.choice li{counter-increment:ch;font-size:1.6rem;font-weight:700;padding:.7rem 0 .7rem 3.4rem;position:relative;border-top:1px solid var(--hair);line-height:1.5}
+ol.choice li:first-child{border-top:0}
+ol.choice li::before{content:counter(ch);position:absolute;left:.2rem;top:.6rem;width:2.3rem;height:2.3rem;border-radius:50%;border:2px solid var(--hair);display:grid;place-items:center;font-family:var(--serif);font-size:1.1rem;color:var(--gold)}
+ol.choice li.on{color:var(--wine)}ol.choice li.on::before{background:var(--wine);border-color:var(--wine);color:#fff}
+.reveal{align-self:flex-start;font-family:inherit;font-size:1.05rem;font-weight:900;border:1px solid var(--wine);background:var(--card);color:var(--wine);border-radius:999px;padding:.5rem 1.3rem;cursor:pointer}
+.reveal.on{background:var(--wine);color:#fff}
+.ans{display:none;margin-top:1rem;padding:1rem 1.3rem;background:var(--wine-soft);border-radius:.8rem;font-size:1.35rem;line-height:1.6;font-weight:700;color:var(--wine)}
+.ans.on{display:block}
+.ans span{display:block;font-size:.85em;font-weight:500;color:var(--muted);margin-top:.3rem}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.4rem;flex:1}
+.quad .qd{background:var(--card);border:1px solid var(--hair);border-left:.5rem solid var(--wine);border-radius:1rem;padding:1.1rem 1.4rem;display:flex;flex-direction:column;justify-content:center}
+.quad .nm{font-family:var(--serif);font-size:2rem;font-weight:900;color:var(--wine);margin-bottom:.5rem;letter-spacing:-.02em}
+.quad p{font-size:1.3rem;line-height:1.5;margin:0 0 .4rem;font-weight:600}
+.quad .ex{font-size:1.05rem;color:var(--muted);font-weight:500;margin:0}
+ol.steps code{white-space:nowrap}
+.acopy{font-family:inherit;font-size:1rem;font-weight:900;border:0;border-radius:999px;padding:.45rem 1.1rem;margin-left:.6rem;background:var(--wine);color:#fff;cursor:pointer;vertical-align:middle;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.acopy:hover{background:#5a1a26}
+.acopy.ok{background:var(--green)}
+ul.says .acopy{font-family:var(--sans,inherit);font-size:.95rem;vertical-align:middle}
+.want{list-style:none;padding:0;margin:0 0 1.2rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem 1rem}
+.want li{font-size:1.35rem;font-weight:700;padding:.75rem 1.1rem;border:1px solid var(--hair);border-radius:.8rem;background:var(--card);color:var(--ink)}
+.quiz .note{font-size:1.15rem;color:var(--muted);margin:0}
+/* 말씀 인용 */
+.quote{align-items:center;text-align:center}
+.quote blockquote{margin:0;font-family:var(--serif);font-size:3.2rem;font-weight:900;line-height:1.45;color:var(--wine);letter-spacing:-.02em;max-width:28em}
+.quote blockquote::before{content:"“";color:var(--gold)}.quote blockquote::after{content:"”";color:var(--gold)}
+.quote .src{margin-top:1.6rem;font-size:1.15rem;color:var(--muted);letter-spacing:.04em}
+.quote .src b{color:var(--ink);font-weight:700}
+/* 자서전 목차 칩 — 큰 번호 */
+.topics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem 1.2rem}
+.topics div{display:flex;gap:.8rem;align-items:baseline;padding:.8rem 1rem;background:var(--card);border:1px solid var(--hair);border-radius:.8rem;font-size:1.3rem;font-weight:700;line-height:1.35}
+.topics div i{font-style:normal;font-family:var(--serif);color:var(--gold);font-size:1.1rem;font-weight:900;flex:none}
+.topics div.hi{background:var(--gold-soft);border-color:#e4c679}
+/* 다듬는 말 · 검토 */
+ul.says{list-style:none;margin:0;padding:0}
+ul.says li{font-family:var(--serif);font-size:1.75rem;font-weight:700;line-height:1.5;padding:.8rem 0 .8rem 1.4rem;border-top:1px solid var(--hair);color:var(--ink)}
+ul.says li:first-child{border-top:0}
+ul.says li span::before{content:"“";color:var(--gold);margin-right:.2rem}ul.says li span::after{content:"”";color:var(--gold)}
+ul.check{list-style:none;margin:0;padding:0}
+ul.check li{font-size:1.35rem;font-weight:700;line-height:1.5;padding:.55rem 0 .55rem 2.2rem;position:relative}
+ul.check li::before{content:"";position:absolute;left:.1rem;top:.85rem;width:1.3rem;height:1.3rem;border:2px solid var(--wine);border-radius:.3rem}
+.dlink a{font-weight:900;color:var(--wine);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:.2em}
+.dlist{margin:0;display:grid;gap:.3rem}.dlist a{font-size:1.12rem;font-weight:700;color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:.2em;line-height:1.4}.dlist a:hover{color:var(--wine)}
+/* 끝 장 */
+.motto{align-items:center;justify-content:center;text-align:center}
+.motto .han{font-family:var(--serif);font-size:7rem;font-weight:900;color:var(--wine);line-height:1.15;letter-spacing:.06em}
+.motto .han span{color:var(--gold)}
+.motto .han em{font-style:normal;font-size:1.65em;color:var(--wine);vertical-align:-.08em;letter-spacing:.02em}
+.motto .ko{font-size:2.2rem;font-weight:700;color:var(--ink);margin-top:1.6rem}
+.motto .sub{font-size:1.4rem;color:var(--muted);margin-top:.6rem}
+@media (max-width:900px){.motto .han{font-size:4.2rem}}
+.qa{align-items:center;text-align:center}
+.qa .mark{font-family:var(--serif);font-size:5.2rem;font-weight:900;color:var(--wine);line-height:1.2;letter-spacing:-.03em}
+.qa .mark span{color:var(--gold)}
+.qa .sub{font-size:1.5rem;color:var(--muted);margin-top:1rem}
+.addr{display:inline-block;margin-top:1.6rem;font-family:var(--num);font-size:2.2rem;font-weight:900;color:var(--green);letter-spacing:.02em;padding:.5rem 1.4rem;border:2px solid var(--green);border-radius:.8rem;background:var(--card)}
+/* 넘김 단추 · 도구 · 차례 */
+.pager{position:fixed;right:2vw;top:14px;z-index:50;display:flex;align-items:center;gap:.5rem;
+  background:var(--card);border:1px solid var(--hair);border-radius:999px;padding:.35rem .4rem .35rem .9rem;
+  box-shadow:0 .6rem 1.6rem -.9rem rgba(60,30,20,.5)}
+.pager .pg{font-size:.9rem;color:var(--muted);min-width:4.6em;text-align:center}
+.pager button{width:2.7rem;height:2.7rem;border-radius:50%;border:1px solid var(--hair);background:var(--paper);color:var(--ink);
+  font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 .15rem;font-family:inherit}
+.pager button:hover{border-color:var(--wine);color:var(--wine)}
+.pager button.next{background:var(--wine);color:#fff;border-color:var(--wine)}
+.pager button:disabled{opacity:.3;cursor:default}
+.tools{position:fixed;right:3vw;bottom:14px;z-index:50;display:flex;gap:.4rem;align-items:center}
+.tools button{font-family:inherit;font-size:.78rem;border:1px solid var(--hair);background:var(--card);color:var(--muted);border-radius:999px;padding:.35rem .8rem;cursor:pointer}
+.tools button:hover{color:var(--wine);border-color:var(--wine)}
+.tools .hint{font-size:.72rem;color:var(--faint);margin-left:.4rem}
+.toc{position:fixed;right:3vw;bottom:6.5vh;z-index:60;background:var(--card);border:1px solid var(--hair);border-radius:1rem;padding:.8rem 1rem;
+  display:none;grid-template-columns:1fr 1fr;gap:.1rem 1.4rem;box-shadow:0 .8rem 2rem -1rem rgba(60,30,20,.5);max-height:80vh;overflow:auto}
+.toc.open{display:grid}
+.toc button{font-family:inherit;font-size:.86rem;text-align:left;background:none;border:0;color:var(--muted);padding:.3rem .4rem;cursor:pointer;border-radius:.4rem}
+.toc button:hover{background:var(--paper-2);color:var(--ink)}
+.toc button.on{color:var(--wine);font-weight:900}
+button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media (max-width:900px){
+  html{font-size:calc(15px * var(--zoom));scroll-snap-type:none}
+  .slide{height:auto;min-height:0;padding:9vh 5vw 4vh;overflow:visible}
+  .two,.two.narrow-r,.three,.warn{grid-template-columns:1fr}
+  .cover h1{font-size:3rem} .divider h1{font-size:2.8rem} .qa .mark{font-size:2.6rem}
+  .top{position:static;padding:1rem 5vw 0} .tools .hint{display:none}
+  .pager{top:auto;bottom:12px;right:12px} .tools{bottom:12px;left:12px;right:auto} .toc{left:12px;right:auto}
+  .prompt .copy{position:static;display:inline-block;margin-bottom:.8rem}
+}
+@media print{.top,.pager,.tools,.toc,.prompt .copy,.acopy{display:none} .slide{height:auto;page-break-after:always;overflow:visible} body{background:#fff}}
+
+/* 띠 숨기기(H) · 투사할 때 위 띠와 단추를 감춤 */
+body.clean .top, body.clean .tools, body.clean .pager{opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="top"><span><b>행사 이름</b> · 기관 · 2026. 10. 6.</span><span class="now" id="nowTitle"></span></div>
+
+<section class="slide cover" id="s0" data-title="표지">
+  <div class="lbl">행사 이름 · 제1강</div>
+  <h1>교육 제목<br>두 줄까지</h1>
+  <p class="lede">구성 한 줄 · 이론 10분 · 실습 30분<br>교육 목적 한 줄</p>
+  <div class="meta">
+    <div><b class="tnum">10. 6.</b><span class="lbl">2026년 화요일</span></div>
+    <div><b class="tnum">11:00</b><span class="lbl">60분</span></div>
+    <div><b class="tnum">30</b><span class="lbl">참석 인원 · 노트북 실습</span></div>
+    <div><b>발표자</b><span class="lbl">소속 · 직함</span></div>
+  </div>
+</section>
+<section class="slide" id="s1" data-title="교육 목표와 구성">
+  <div class="s-head"><span class="n">01</span><span class="line"></span><span class="t">11:00</span></div>
+  <h2>교육 목표와 구성</h2>
+  <p class="big q"><b>결과물 2가지</b><span>결과물 1 · 결과물 2</span></p>
+  <div class="three">
+    <div class="card"><div class="no">1부 이론 · 10분</div><p>11:00 ~ 11:10</p><p class="out">시작 질문 · 개념 · 유의사항</p></div>
+    <div class="card green"><div class="no">2부 실습 · 30분</div><p>11:10 ~ 11:40</p><p class="out">접속 · 실습 1 · 실습 2</p></div>
+    <div class="card gold"><div class="no">3부 정리 · 20분</div><p>11:40 ~ 12:00</p><p class="out">결과물 공유 · 질의응답</p></div>
+  </div>
+  <p class="sub">준비물 · 실습 도구 · 문의처</p>
+</section>
+<section class="slide divider" id="d1" data-title="1부 이론 · 11:00 ~ 11:10">
+  <div class="lbl">1부 이론 · 11:00 ~ 11:10</div>
+  <h1>파트 제목<br>두 줄까지</h1>
+  <p class="sub">이 파트에서 다룰 것 · 셋 · 넷</p>
+</section>
+<section class="slide quiz" id="q1" data-title="질문 1">
+  <div class="s-head"><span class="n">02</span><span class="line"></span><span class="t">1부 이론 · 시작 질문 1</span></div>
+  <h2>첫 번째 질문</h2>
+  <p class="big q">O X 로 답할 문장 한 줄</p>
+  <div class="ox"><span class="o">O</span><span class="x">X</span></div>
+  <button type="button" class="reveal" data-ans="x">정답 보기</button>
+  <div class="ans">정답 X<span>정답 풀이 한두 줄</span></div>
+</section>
+<section class="slide" id="c0" data-title="핵심 개념 4가지">
+  <div class="s-head"><span class="n">00</span><span class="line"></span><span class="t">1부 이론 · 2분</span></div>
+  <h2>핵심 개념 4가지 <small>상세 설명은 부록</small></h2>
+  <div class="quad">
+    <div class="qd"><div class="nm">개념 1</div><p>뜻풀이 한 줄</p><p class="ex">비유 · 쉬운 예</p></div>
+    <div class="qd"><div class="nm">개념 2</div><p>뜻풀이 한 줄</p><p class="ex">비유 · 쉬운 예</p></div>
+    <div class="qd"><div class="nm">개념 3</div><p>뜻풀이 한 줄</p><p class="ex">비유 · 쉬운 예</p></div>
+    <div class="qd"><div class="nm">개념 4</div><p>뜻풀이 한 줄</p><p class="ex">비유 · 쉬운 예</p></div>
+  </div>
+</section>
+<section class="slide" id="s11" data-title="유의사항">
+  <div class="s-head"><span class="n">00</span><span class="line"></span><span class="t">1부 이론 · 2분</span></div>
+  <h2>유의사항</h2>
+  <div class="warn">
+    <div class="w"><b>사실 확인</b><p>연도 · 인명 · 인용은 원자료 대조</p></div>
+    <div class="w"><b>개인정보 보호</b><p>주민번호 · 연락처 · 명단 입력 금지</p></div>
+    <div class="w"><b>공개 전 검토</b><p>AI 결과물은 초안 · 본인 검토 뒤 공개</p></div>
+  </div>
+</section>
+<section class="slide motto" id="mt1" data-title="百聞不如一見">
+  <p class="han">百聞不如一<em>見</em></p>
+  <p class="ko">백문이 불여일견</p>
+  <p class="sub">백 번 듣는 것보다 한 번 보는 것</p>
+</section>
+<section class="slide" id="s16" data-title="프롬프트 1">
+  <div class="s-head"><span class="n">00</span><span class="line"></span><span class="t">2부 실습 · 실습 1</span></div>
+  <h2>프롬프트 1. 문서 정리 <small>파일 첨부 후 붙여넣기</small></h2>
+  <div class="prompt">
+    <button type="button" class="copy" data-copy="pA">복사</button>
+    <p id="pA">첨부한 파일을 아래 순서로 정리해 주세요.<br>1. 기본 정보 표<br>2. 핵심 요지 3줄<br>3. 요약 300자 안팎<br>파일에 없는 내용은 보태지 마세요.</p>
+  </div>
+  <div class="how"><span>먼저 <b>＋ 단추 · 파일 업로드</b>로 파일 첨부</span><span>추가 요청: <b>「문장만 짧게 다듬어 주세요」</b></span></div>
+</section>
+<section class="slide qa" id="s20" data-title="마침">
+  <div class="lbl" style="color:var(--gold);margin-bottom:1.2rem">12:00</div>
+  <p class="mark">감사합니다</p>
+  <p class="sub">자료실 이름</p>
+  <span class="addr">example.com/deck.html</span>
+</section>
+<section class="slide concept" id="s3" data-title="부록 · 개념 1">
+  <div class="s-head"><span class="n">A</span><span class="line"></span><span class="t">부록 · 개념 상세 1</span></div>
+  <h2>개념 1</h2>
+  <div class="two narrow-r">
+    <div>
+      <div class="pair"><div class="k">뜻</div><div class="v">한 줄 풀이</div></div>
+      <div class="pair"><div class="k">예</div><div class="v">쉬운 예<span>덧붙임 한 줄</span></div></div>
+      <div class="pair"><div class="k">비유</div><div class="v">일상 비유 한 줄</div></div>
+    </div>
+    <div class="demo"><h3>화면 시연</h3><p class="ask">시연할 질문 한 줄</p><p>시연에서 보여 줄 것</p></div>
+  </div>
+</section>
+
+<div class="tools">
+  <button id="tocBtn" type="button">차례</button>
+  <button id="zoomOut" type="button" title="글자 작게">글자 −</button>
+  <button id="zoomIn" type="button" title="글자 크게">글자 ＋</button>
+  <button id="cleanBtn" type="button">띠 숨기기</button>
+  <span class="hint">← → 넘김 · H 띠</span>
+</div>
+<div class="toc" id="toc"></div>
+<div class="pager" aria-label="장 넘김">
+  <span class="pg tnum" id="pg">1 / 1</span>
+  <button type="button" id="prevBtn" class="prev" title="이전 장 (←)" aria-label="이전 장">‹</button>
+  <button type="button" id="nextBtn" class="next" title="다음 장 (→)" aria-label="다음 장">›</button>
+</div>
+
+<script>
+const units = [...document.querySelectorAll('.slide')];
+const toc = document.getElementById('toc');
+toc.innerHTML = units.map((u, i) => `<button type="button" data-go="${u.id}">${i + 1}. ${u.dataset.title}</button>`).join('');
+const tbs = [...toc.querySelectorAll('button')];
+function current() {
+  let at = 0; const mid = window.innerHeight * 0.45;
+  units.forEach((u, i) => { if (u.getBoundingClientRect().top <= mid) at = i; });
+  return at;
+}
+function mark() {
+  const at = current();
+  tbs.forEach((b, i) => b.classList.toggle('on', i === at));
+  document.getElementById('pg').textContent = (at + 1) + ' / ' + units.length;
+  document.getElementById('prevBtn').disabled = at === 0;
+  document.getElementById('nextBtn').disabled = at === units.length - 1;
+  document.getElementById('nowTitle').textContent = at === 0 ? '' : units[at].dataset.title;
+}
+function goTo(i) {
+  i = Math.max(0, Math.min(units.length - 1, i));
+  units[i].scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+addEventListener('scroll', mark, { passive: true });
+addEventListener('resize', mark, { passive: true });
+mark();
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]');
+  if (!g) return;
+  goTo(units.findIndex(u => u.id === g.dataset.go));
+  toc.classList.remove('open');
+});
+document.getElementById('tocBtn').addEventListener('click', e => { toc.classList.toggle('open'); e.currentTarget.blur(); });
+document.getElementById('prevBtn').addEventListener('click', e => { goTo(current() - 1); e.currentTarget.blur(); });
+document.getElementById('nextBtn').addEventListener('click', e => { goTo(current() + 1); e.currentTarget.blur(); });
+addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if (k === ' ' && e.target.closest('button')) return;
+  if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); goTo(current() + 1); }
+  else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); goTo(current() - 1); }
+  else if (k === 'Home') { e.preventDefault(); goTo(0); }
+  else if (k === 'End') { e.preventDefault(); goTo(units.length - 1); }
+  else if (k === 'Escape') toc.classList.remove('open');
+  else if (k === 'h' || k === 'H') toggleClean();
+});
+const cleanBtn = document.getElementById('cleanBtn');
+function toggleClean() { const on = document.body.classList.toggle('clean'); cleanBtn.textContent = on ? '띠 보이기' : '띠 숨기기'; }
+cleanBtn.addEventListener('click', e => { toggleClean(); e.currentTarget.blur(); });
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} }
+};
+let zoom = Math.min(1.6, Math.max(0.7, Number(store.get('my-deck.zoom')) || 1));
+function setZoom(z) {
+  zoom = Math.min(1.6, Math.max(0.7, Math.round(z * 20) / 20));
+  document.documentElement.style.setProperty('--zoom', zoom);
+  store.set('my-deck.zoom', zoom);
+  mark();
+}
+setZoom(zoom);
+document.getElementById('zoomIn').addEventListener('click', () => setZoom(zoom + 0.05));
+document.getElementById('zoomOut').addEventListener('click', () => setZoom(zoom - 0.05));
+// 장 번호 = 쪽 번호(표지 1 · 부록은 A B 그대로)
+units.forEach((u, i) => { const n = u.querySelector('.s-head .n'); if (n && !/^[A-Z]$/.test(n.textContent.trim())) n.textContent = String(i + 1).padStart(2, '0'); });
+// 퀴즈 「정답 보기」. O/X 또는 번호에 색을 켜고 답 상자를 연다
+document.querySelectorAll('.reveal').forEach(b => {
+  b.addEventListener('click', () => {
+    const on = !b.classList.contains('on'); b.classList.toggle('on', on); b.textContent = on ? '정답 닫기' : '정답 보기';
+    const sl = b.closest('.slide'); sl.querySelector('.ans').classList.toggle('on', on);
+    sl.querySelectorAll('.ox span').forEach(x => x.classList.toggle('on', on && x.classList.contains(b.dataset.ans)));
+    sl.querySelectorAll('ol.choice li').forEach((li, i) => li.classList.toggle('on', on && String(i + 1) === b.dataset.ans));
+  });
+});
+document.querySelectorAll('.acopy').forEach(b => {
+  b.addEventListener('click', async () => {
+    const v = b.dataset.url || b.dataset.text;
+    try { await navigator.clipboard.writeText(v); } catch (e) {
+      const t = document.createElement('textarea'); t.value = v; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove();
+    }
+    const old = b.textContent; b.textContent = '복사됨'; b.classList.add('ok');
+    setTimeout(() => { b.textContent = old; b.classList.remove('ok'); }, 1500);
+  });
+});
+document.querySelectorAll('.prompt .copy').forEach(b => {
+  b.addEventListener('click', () => {
+    const el = document.getElementById(b.dataset.copy);
+    const text = (el.tagName === 'PRE' ? el.textContent : el.innerText).replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+    const done = ok => { b.textContent = ok ? '복사됨 ✓' : '복사 실패. 글을 선택해 Ctrl+C'; b.classList.toggle('ok', ok); setTimeout(() => { b.textContent = '복사'; b.classList.remove('ok'); }, 2500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => done(true), () => done(false));
+    else { const r = document.createRange(); r.selectNodeContents(document.getElementById(b.dataset.copy)); const s = getSelection(); s.removeAllRanges(); s.addRange(r); done(document.execCommand('copy')); s.removeAllRanges(); }
+  });
+});
+</script>
+</body>
+</html>
