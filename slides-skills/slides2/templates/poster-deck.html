@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="슬라이드 스킬 2 견본 덱 · 핵심 칸 · 발표자 원고 · 원고 창">
+<title>견본 덱 · 학술 발표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700;900&display=swap">
+<style>
+/* 슬라이드 스킬 2 견본 덱 · 행사 포스터 테마 · 장마다 오른쪽 「핵심」 칸 · 발표자 원고 · 원고 창
+   · 바꾸는 자리 셋: ①:root 색·글꼴 ②<section class="slide"> 본문 ③presenterData JSON
+   · 넘김·차례·글자 크기·띠 숨기기·핵심 칸·원고 칸·원고 창 코드는 손대지 않음
+   · 덱마다 맨 아래 store 열쇠(my-talk.zoom)와 BroadcastChannel 이름(my-talk-deck)만 바꿈 */
+:root{
+  --bg:#15120f; --bg2:#1c1814; --card:#211c17; --card2:#2a241e;
+  --ink:#f1ebdf; --muted:#b7ad9c; --faint:#857b6c; --hair:rgba(241,235,223,.15);
+  --red:#e9533b; --red-soft:rgba(233,83,59,.15); --paper:#efe7d6;
+  --display:"Black Han Sans","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",sans-serif;
+  --han:"Noto Serif KR","Batang","AppleMyungjo",serif;
+  --zoom:1;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{font-size:calc(clamp(12px, min(1.12vw, 1.98vh), 24px) * var(--zoom));scroll-snap-type:y mandatory;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all}
+::selection{background:var(--red);color:#fff}
+a{color:inherit}
+/* ── 위 띠 ── */
+.top{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:2rem;
+  padding:1rem 6vw .8rem;font-size:.74rem;letter-spacing:.24em;color:var(--faint);font-weight:700;pointer-events:none;
+  background:linear-gradient(180deg,var(--bg) 60%,rgba(21,18,15,0))}
+.top b{color:var(--muted)}
+.top .now{letter-spacing:.06em;color:var(--muted);margin-right:15rem}
+/* ── 장 ── */
+.slide{height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:center;
+  padding:4.4rem 6vw 4.2rem;overflow:hidden;position:relative}
+.slide>*{flex:none}
+.s-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:.9rem}
+.s-head .n{font-size:.9rem;color:var(--red);font-weight:900;letter-spacing:.18em}
+.s-head .line{flex:1;height:2px;background:var(--hair)}
+.s-head .t{font-size:.8rem;color:var(--red);letter-spacing:.24em;font-weight:900}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;color:var(--ink);letter-spacing:-.01em;line-height:1.15}
+h2{font-size:3rem;margin-bottom:1.3rem}
+h2 em,h1 em{font-style:normal;color:var(--red)}
+h2 small{font-family:var(--sans);font-size:1rem;color:var(--faint);font-weight:500;margin-left:.8rem;letter-spacing:.02em}
+h3{font-size:.86rem;letter-spacing:.2em;color:var(--red);margin:0 0 .6rem;font-weight:900}
+.hj{font-family:var(--han)}
+/* 표지 */
+.cover{padding-left:7vw;padding-right:7vw}
+.cover .eyebrow{display:flex;justify-content:space-between;font-size:.95rem;letter-spacing:.32em;font-weight:900;color:var(--muted);margin-bottom:2.2rem}
+.cover h1{font-size:6.2rem;line-height:1.08;margin-bottom:1.6rem}
+.cover .lede{font-size:1.5rem;color:var(--muted);margin:0 0 2.4rem;max-width:34em;line-height:1.6}
+.cover .rule{height:3px;background:var(--ink);opacity:.9;margin:0 0 1.4rem}
+.cover .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
+.cover .who{font-size:1.5rem;font-weight:900}
+.cover .who span{display:block;font-size:.95rem;font-weight:500;color:var(--faint);letter-spacing:.06em;margin-top:.2rem}
+.cover .when{text-align:right}
+.cover .when b{display:block;font-family:var(--display);font-weight:400;font-size:3.4rem;color:var(--red);line-height:1}
+.cover .when span{font-size:1.15rem;font-weight:900}
+.seal{position:absolute;display:grid;place-items:center;background:var(--red);color:var(--paper);font-family:var(--han);font-weight:900;
+  border-radius:.5rem;box-shadow:0 0 0 .35rem var(--bg),0 0 0 .6rem rgba(241,235,223,.18);transform:rotate(-7deg);line-height:1}
+.cover .seal{right:8vw;top:16vh;width:12rem;height:12rem;font-size:8.4rem}
+.cover .seal-cap{position:absolute;right:8vw;top:calc(16vh + 14rem);width:12rem;text-align:center;font-family:var(--han);font-size:1.5rem;font-weight:900;letter-spacing:.5em;color:var(--ink)}
+.case-no{align-self:flex-start;display:inline-block;font-size:.9rem;letter-spacing:.26em;font-weight:900;color:var(--red);border:2px solid var(--red);padding:.3rem .8rem;margin-bottom:1.4rem}
+/* 간지 */
+.divider{padding-left:9vw}
+.divider .no{font-family:var(--display);font-size:11rem;line-height:.9;color:var(--red)}
+.divider h1{font-size:5rem;margin:.6rem 0 1rem}
+.divider .sub{font-size:1.5rem;color:var(--muted);margin:0}
+.divider .seal{right:9vw;top:50%;width:9rem;height:9rem;font-size:6rem;margin-top:-4.5rem}
+/* 글 */
+.big{font-size:2rem;font-weight:900;line-height:1.5;margin:0 0 1.2rem;letter-spacing:-.01em}
+.big em{font-style:normal;color:var(--red)}
+.lead{font-size:1.25rem;color:var(--muted);margin:0 0 1rem;line-height:1.6}
+ul.pts{list-style:none;margin:0;padding:0}
+ul.pts li{font-size:1.45rem;line-height:1.6;padding:.45rem 0 .45rem 1.7rem;position:relative}
+ul.pts li::before{content:"";position:absolute;left:.2rem;top:1.05em;width:.6rem;height:.6rem;background:var(--red)}
+ul.pts li b{color:var(--red);font-weight:900}
+ul.pts li span{display:block;font-size:.76em;color:var(--muted);font-weight:400}
+ul.pts.sm li{font-size:1.22rem;padding:.3rem 0 .3rem 1.6rem}
+.note{font-size:.95rem;color:var(--faint);margin:1rem 0 0;line-height:1.55}
+.note b{color:var(--muted)}
+/* 한문 인용 칸 */
+.han{background:var(--card);border-left:.45rem solid var(--red);padding:1rem 1.4rem;margin:0 0 1rem}
+.han .h{font-family:var(--han);font-size:1.7rem;font-weight:700;line-height:1.6;letter-spacing:.05em}
+.han .h b{color:var(--red);font-weight:900}
+.han .e{font-size:.92rem;color:var(--faint);margin:.15rem 0 .45rem;letter-spacing:.02em}
+.han .k{font-size:1.2rem;line-height:1.6;color:var(--muted)}
+.han .src{display:block;font-size:.82rem;color:var(--faint);margin-top:.4rem;letter-spacing:.04em}
+.han.sm .h{font-size:1.38rem}.han.sm .k{font-size:1.05rem}
+.han.big-h .h{font-size:2.4rem}
+/* 칸 */
+.card{background:var(--card);padding:1.1rem 1.3rem;border-top:.35rem solid var(--ink)}
+.card.r{border-top-color:var(--red)}
+.card h3{margin-bottom:.4rem}
+.card .nm{font-family:var(--display);font-size:1.8rem;line-height:1.2;margin-bottom:.5rem}
+.card .nm small{font-family:var(--sans);font-size:.9rem;color:var(--faint);margin-left:.4rem}
+.card p{margin:0 0 .4rem;font-size:1.12rem;line-height:1.55}
+.card p.m{color:var(--muted);font-size:1rem}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3.5vw;align-items:start}
+.two.l{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+.two.r{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+.two.mid{align-items:center}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}
+.four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.five{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.9rem}
+/* 그림 */
+.fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.fig img{display:block;max-width:100%;max-height:56vh;object-fit:contain;background:var(--paper);padding:.45rem;border-radius:.2rem}
+.fig.tall img{max-height:64vh}
+.fig.short img{max-height:40vh}
+.fig.wide img{max-height:30vh}
+.fig figcaption{font-size:.82rem;color:var(--faint);text-align:center;line-height:1.4}
+.fig .none{display:grid;place-items:center;width:20rem;height:14rem;background:var(--card2);color:var(--faint);font-size:.9rem;padding:1rem;text-align:center}
+/* 표 */
+table{width:100%;border-collapse:collapse;font-size:1.12rem}
+th,td{text-align:left;padding:.65rem .9rem .65rem 0;border-bottom:1px solid var(--hair);vertical-align:top;line-height:1.45}
+th{font-size:.76rem;letter-spacing:.18em;color:var(--red);font-weight:900;border-bottom:2px solid var(--ink)}
+td:first-child{font-weight:900;white-space:nowrap}
+td .hj,th .hj{font-size:1.05em}
+td.hot{color:var(--red);font-weight:900}
+table.sm{font-size:.98rem}table.sm th,table.sm td{padding:.5rem .7rem .5rem 0}
+/* 연표 */
+.time{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:3px solid var(--ink);margin-top:.6rem}
+.time div{padding:1.1rem 1.1rem 0 0;position:relative}
+.time div::before{content:"";position:absolute;top:-.62rem;left:0;width:.9rem;height:.9rem;background:var(--ink)}
+.time div.hot::before{background:var(--red)}
+.time b{display:block;font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1}
+.time div.hot b{color:var(--red)}
+.time i{display:block;font-style:normal;font-size:.85rem;letter-spacing:.16em;color:var(--faint);font-weight:900;margin:.2rem 0 .5rem}
+.time p{margin:0;font-size:1.05rem;line-height:1.5;color:var(--muted)}
+.time p strong{color:var(--ink)}
+/* 인물 흐름 */
+.cast .card{position:relative;padding-top:2.2rem}
+.cast .card .k{position:absolute;top:.7rem;left:1.3rem;font-size:.78rem;letter-spacing:.2em;color:var(--red);font-weight:900}
+.cast .card p{font-size:1rem}
+/* 대비 상자 */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:1.4rem;align-items:stretch}
+.vs .mid{display:grid;place-items:center;font-family:var(--display);font-size:2.2rem;color:var(--red)}
+.punch{font-family:var(--display);font-size:3.4rem;line-height:1.2;margin:.4rem 0 0}
+.punch em{font-style:normal;color:var(--red)}
+.tag{display:inline-block;font-size:.8rem;letter-spacing:.14em;font-weight:900;padding:.18rem .6rem;background:var(--red);color:#fff;margin-right:.5rem;vertical-align:.15em}
+.tag.o{background:transparent;color:var(--muted);border:1px solid var(--hair)}
+.moon{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:.4rem 0 1rem}
+.moon div{background:var(--card);padding:.9rem 1.1rem;text-align:center}
+.moon b{display:block;font-family:var(--display);font-weight:400;font-size:1.7rem}
+.moon span{font-size:1.05rem;color:var(--muted)}
+.end{align-items:flex-start}
+.end .tagline{position:absolute;left:6vw;right:6vw;bottom:4.2rem;display:flex;justify-content:space-between;border-top:3px solid var(--ink);padding-top:1rem;font-family:var(--display);font-size:1.6rem;color:var(--red)}
+.end .tagline span{font-family:var(--sans);font-size:.95rem;color:var(--faint);letter-spacing:.06em;align-self:center}
+/* 넘김 단추 · 도구 · 차례 */
+.pager{position:fixed;right:2vw;top:12px;z-index:50;display:flex;align-items:center;gap:.5rem;background:var(--card);border:1px solid var(--hair);border-radius:999px;padding:.35rem .4rem .35rem .9rem}
+.pager .pg{font-size:.9rem;color:var(--muted);min-width:4.6em;text-align:center}
+.pager button{width:2.6rem;height:2.6rem;border-radius:50%;border:1px solid var(--hair);background:transparent;color:var(--ink);font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 .15rem;font-family:inherit}
+.pager button:hover{border-color:var(--red);color:var(--red)}
+.pager button.next{background:var(--red);color:#fff;border-color:var(--red)}
+.pager button:disabled{opacity:.3;cursor:default}
+.tools{position:fixed;right:2vw;bottom:14px;z-index:50;display:flex;gap:.4rem;align-items:center}
+.tools button{font-family:inherit;font-size:.78rem;border:1px solid var(--hair);background:var(--card);color:var(--muted);border-radius:999px;padding:.35rem .8rem;cursor:pointer}
+.tools button:hover{color:var(--red);border-color:var(--red)}
+.tools .hint{font-size:.72rem;color:var(--faint);margin-left:.4rem}
+.toc{position:fixed;right:2vw;bottom:7vh;z-index:60;background:var(--card);border:1px solid var(--hair);border-radius:.8rem;padding:.8rem 1rem;display:none;grid-template-columns:1fr 1fr;gap:.1rem 1.4rem;max-height:80vh;overflow:auto}
+.toc.open{display:grid}
+.toc button{font-family:inherit;font-size:.86rem;text-align:left;background:none;border:0;color:var(--muted);padding:.3rem .4rem;cursor:pointer;border-radius:.3rem}
+.toc button:hover{background:var(--card2);color:var(--ink)}
+.toc button.on{color:var(--red);font-weight:900}
+button:focus-visible,a:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+body.clean .top,body.clean .pager,body.clean .tools{opacity:0;pointer-events:none}
+body.clean .tools:hover,body.clean .pager:hover{opacity:1;pointer-events:auto}
+@media (max-width:900px){
+  html{font-size:calc(15px * var(--zoom));scroll-snap-type:none}
+  .slide{height:auto;min-height:0;padding:8vh 5vw 5vh;overflow:visible}
+  .two,.two.l,.two.r,.three,.four,.five,.vs,.moon,.time{grid-template-columns:1fr}
+  .vs .mid{font-size:1.4rem}
+  .cover h1{font-size:3rem}.cover .seal,.cover .seal-cap,.divider .seal{display:none}
+  .divider .no{font-size:6rem}.divider h1{font-size:2.8rem}
+  h2{font-size:2.1rem}.punch{font-size:2.2rem}
+  .top{position:static;padding:1rem 5vw 0}.top .now{margin-right:0}.tools .hint{display:none}
+  .pager{top:auto;bottom:12px;right:12px}.tools{bottom:12px;left:12px;right:auto}.toc{left:12px;right:auto}
+  .end .tagline{position:static;margin-top:2rem}
+  table{display:block;overflow-x:auto}
+}
+/* ── 오른쪽 「핵심」 칸(장마다 · presenterData 의 key 에서 만듦) ── */
+:root{--keyw:17rem}
+.slide{padding-right:calc(var(--keyw) + 5vw)}
+.slide.cover{padding-right:7vw}
+.divider .seal{right:calc(var(--keyw) + 8vw)}
+.key{position:absolute;right:2.4vw;top:5.2rem;bottom:4.8rem;width:var(--keyw);display:flex;flex-direction:column;justify-content:center;border-left:2px solid var(--hair);padding-left:1.4rem}
+.key .lb{font-size:.76rem;letter-spacing:.26em;color:var(--red);font-weight:900;margin-bottom:.9rem}
+.key p{font-family:var(--display);font-size:1.75rem;line-height:1.35;margin:0;color:var(--ink);word-break:keep-all}
+.key .pg{font-size:.8rem;color:var(--faint);margin-top:1.2rem;letter-spacing:.1em}
+/* ── 발표자 원고 칸(P) ── */
+.presenter-panel[hidden]{display:none!important}
+.presenter-panel{position:fixed;left:3vw;bottom:4rem;z-index:70;width:min(50rem,90vw);max-height:56vh;overflow:auto;background:var(--card2);color:var(--ink);border:1px solid var(--red);border-radius:.6rem;box-shadow:0 .8rem 3rem rgba(0,0,0,.5);padding:1.1rem 1.4rem;font-size:17px;line-height:1.8}
+.presenter-panel header{display:flex;align-items:start;justify-content:space-between;gap:1rem}
+.presenter-panel h4{font-size:1.05em;margin:0;color:var(--red)}
+.presenter-panel .ptime{font-size:.85em;color:var(--muted);margin:.2rem 0 .6rem}
+.presenter-panel p{margin:.5rem 0}
+.presenter-panel .ptrans{border-top:1px solid var(--hair);padding-top:.6rem;color:var(--muted)}
+.presenter-panel button{font:inherit;font-size:.85em;color:var(--ink);background:transparent;border:1px solid var(--hair);border-radius:.4rem;cursor:pointer;padding:.2rem .7rem}
+/* ── 원고 창(?notes=1 · 노트북 화면용) ── */
+html.notes{scroll-snap-type:none;font-size:18px}
+html.notes body>*:not(#notesView){display:none!important}
+#notesView{display:none}
+html.notes #notesView{display:grid;grid-template-rows:auto auto 1fr auto;gap:1rem;min-height:100vh;padding:1.4rem 2rem;max-width:70rem;margin:0 auto}
+#notesView .nbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;border-bottom:2px solid var(--ink);padding-bottom:.8rem}
+#notesView .nbar b{font-family:var(--display);font-weight:400;font-size:1.6rem}
+#notesView .nbar span{color:var(--muted)}
+#notesView .clock{font-family:var(--display);font-size:2rem;color:var(--red)}
+#notesView .nkey{background:var(--card);border-left:.4rem solid var(--red);padding:.8rem 1.1rem;font-size:1.15rem;font-weight:700}
+#notesView .nkey i{font-style:normal;font-size:.75rem;letter-spacing:.2em;color:var(--red);display:block}
+#notesView .nscript{font-size:1.75rem;line-height:1.85;margin:0}
+#notesView .ntrans{color:var(--muted);font-size:1.2rem;margin:0}
+#notesView .ntrans b{color:var(--red)}
+#notesView .nfoot{display:flex;gap:.8rem;align-items:center;border-top:1px solid var(--hair);padding-top:.8rem;flex-wrap:wrap}
+#notesView .nfoot button{font:inherit;font-size:1rem;font-weight:900;border:1px solid var(--hair);background:var(--card);color:var(--ink);border-radius:999px;padding:.5rem 1.2rem;cursor:pointer}
+#notesView .nfoot button.next{background:var(--red);border-color:var(--red);color:#fff}
+#notesView .nfoot small{color:var(--faint);margin-left:auto}
+#notesView .nnext{color:var(--faint);font-size:1rem}
+@media (max-width:900px){.slide{padding-right:5vw}.key{position:static;width:auto;border-left:0;border-top:2px solid var(--hair);padding:1rem 0 0;margin-top:1.4rem}.divider .seal{display:none}}
+@media print{.presenter-panel{display:none!important}}
+@media print{.top,.pager,.tools,.toc{display:none}.slide{height:auto;page-break-after:always;overflow:visible}}
+</style>
+</head>
+<body>
+<div class="top"><span><b>학회 이름</b> · SESSION 1 · 세션 주제</span><span class="now" id="nowTitle"></span></div>
+
+<!-- ══════════ 표지 ══════════ -->
+<section class="slide cover" id="s0" data-title="표지">
+<div class="eyebrow"><span>CONFERENCE NAME IN ENGLISH</span></div>
+<div class="case-no">CASE 0000 · 자료 이름</div>
+<h1>발표 <em>제목</em><br>두 줄까지</h1>
+<p class="lede">부제 한 줄</p>
+<div class="rule"></div>
+<div class="meta"><div class="who">발표자<span>학회 이름 · 장소</span></div><div class="when"><b>10.16 FRI</b><span>14:00</span></div></div>
+<div class="seal" aria-hidden="true">印</div><div class="seal-cap" aria-hidden="true">行事標語</div>
+</section>
+
+<!-- ══════════ I 물음 ══════════ -->
+<section class="slide" id="c1" data-title="연구 물음">
+<div class="s-head"><span class="n">01</span><span class="line"></span><span class="t">I 물음</span></div>
+<h2>연구 물음</h2>
+<div class="two l mid">
+<div>
+<div class="han"><div class="h">學而時習之。</div><div class="e">학이시습지</div><div class="k">배우고 때때로 익힘.<span class="src">『논어』 「학이」</span></div></div>
+<ul class="pts sm">
+<li>연구 배경 한 줄</li>
+<li>쟁점 한 줄<span>덧붙임 한 줄</span></li>
+</ul>
+</div>
+<div><p class="punch">청중에게 던질<br>물음 한 줄<br><em>강조 구절</em></p></div>
+</div>
+</section>
+
+<section class="slide divider" id="d2" data-title="II. 근거">
+<div class="no">II</div>
+<h1>근거</h1>
+<p class="sub">그림 · 선행연구 비교</p>
+<div class="seal" aria-hidden="true">證</div>
+</section>
+
+<section class="slide" id="k1" data-title="그림 1">
+<div class="s-head"><span class="n">03</span><span class="line"></span><span class="t">II 근거</span></div>
+<h2>그림 1 <small>원문 제목</small></h2>
+<div class="two r mid">
+<figure class="fig"><img src="sample.svg" alt="견본 그림" data-file="sample.svg" style="max-height:62vh"><figcaption>그림 1 · 자료 이름<br>출처 · 소장처</figcaption></figure>
+<div>
+<table>
+<tr><th>구분</th><th>견해 A</th><th>견해 B</th></tr>
+<tr><td>원문</td><td class="hj">原文甲</td><td class="hj hot">原文乙</td></tr>
+<tr><td>뜻</td><td>풀이 A</td><td>풀이 B</td></tr>
+</table>
+<p class="note">그림 번호와 출처는 논문과 같게</p>
+</div>
+</div>
+</section>
+
+<section class="slide" id="k2" data-title="선행연구 비교">
+<div class="s-head"><span class="n">04</span><span class="line"></span><span class="t">II 근거</span></div>
+<h2>선행연구 비교</h2>
+<div class="three" style="margin-bottom:1.2rem">
+<div class="card"><h3>연구자 A(2000)</h3><p>주장 한 줄</p><p class="m">근거 한 줄</p></div>
+<div class="card"><h3>연구자 B(2012)</h3><p>주장 한 줄</p><p class="m">근거 한 줄</p></div>
+<div class="card"><h3>연구자 C(2013)</h3><p>주장 한 줄</p><p class="m">근거 한 줄</p></div>
+</div>
+<div class="card r"><h3>이 글</h3><p style="font-size:1.45rem;font-weight:900;line-height:1.5">이 글의 판단 한 줄</p><p class="m">앞선 연구와 다른 점</p></div>
+</section>
+
+<section class="slide end" id="a2" data-title="결론 · 토론">
+<div class="s-head" style="width:100%"><span class="n">05</span><span class="line"></span><span class="t">III 답</span></div>
+<h2>결론 · <em>토론</em></h2>
+<div class="two" style="width:100%">
+<ul class="pts">
+<li>결론 1</li>
+<li>결론 2 <span>덧붙임</span></li>
+<li>남은 과제</li>
+</ul>
+<div class="card r"><h3>토론 거리</h3><p>물음 대신 쟁점 이름</p></div>
+</div>
+<div class="tagline">행사 표어<span>발표 제목 · 발표자</span></div>
+</section>
+
+<!-- ══════════ 참고자료 ══════════ -->
+<section class="slide" id="p1" data-title="참고. 선행연구">
+<div class="s-head"><span class="n">A</span><span class="line"></span><span class="t">참고자료</span></div>
+<h2>선행연구</h2>
+<table class="sm">
+<tr><th>연구자</th><th>논문</th></tr>
+<tr><td>연구자 A</td><td>「논문 제목」, 『학술지』 10, 2000</td></tr>
+<tr><td>연구자 B</td><td>「논문 제목」, 『학술지』 132, 2012</td></tr>
+</table>
+</section>
+
+<div class="tools">
+<button type="button" id="zoomOut" aria-label="글자 작게">글자 −</button>
+<button type="button" id="zoomIn" aria-label="글자 크게">글자 ＋</button>
+<button type="button" id="cleanBtn">띠 숨기기</button>
+<button type="button" id="tocBtn">차례</button>
+<button type="button" id="presenterBtn" aria-expanded="false">발표자 원고</button>
+<button type="button" id="notesBtn">원고 창</button>
+<span class="hint">← → 넘김 · H 띠 · P 원고</span>
+</div>
+<aside class="presenter-panel" id="presenterPanel" aria-label="발표자 원고" hidden>
+<header><div><h4 id="pTitle"></h4><div class="ptime" id="pTime"></div></div><button type="button" id="pClose">닫기</button></header>
+<p id="pScript"></p>
+<p class="ptrans"><b>다음 장 연결</b> · <span id="pTrans"></span></p>
+</aside>
+<main id="notesView" aria-label="발표자 원고 창">
+<div class="nbar"><div><b id="nTitle"></b><br><span id="nTime"></span></div><div class="clock" id="nClock">00:00</div></div>
+<div class="nkey"><i>핵심</i><span id="nKey"></span></div>
+<div><p class="nscript" id="nScript"></p><p class="ntrans"><b>다음 장 연결</b> · <span id="nTrans"></span></p><p class="nnext" id="nNext"></p></div>
+<div class="nfoot"><button type="button" id="nPrev">‹ 이전</button><button type="button" class="next" id="nNextBtn">다음 ›</button><button type="button" id="nClockBtn">시계 시작</button><button type="button" id="nClockReset">시계 0</button><small>덱 창과 함께 움직임 · ← → 로도 넘김</small></div>
+</main>
+<script type="application/json" id="presenterData">
+[
+{
+"id": "s0",
+"seconds": 20,
+"key": "발표 주제 한 줄",
+"script": "안녕하세요. 발표자입니다. 오늘 발표 제목은 「발표 제목」입니다.",
+"transition": "먼저 물음부터 드리겠습니다."
+},
+{
+"id": "c1",
+"seconds": 40,
+"key": "연구 물음 · 명사형 한 줄",
+"script": "여기에 소리 내어 읽을 원고를 씁니다. 초당 4음절 안팎이면 40초에 160음절쯤입니다.",
+"transition": "이 물음의 근거를 보겠습니다."
+},
+{
+"id": "d2",
+"seconds": 5,
+"key": "근거 파트",
+"script": "두 번째 파트, 근거입니다.",
+"transition": ""
+},
+{
+"id": "k1",
+"seconds": 45,
+"key": "그림 1 · 두 견해의 대비",
+"script": "그림을 가리키며 읽을 원고입니다.",
+"transition": "선행연구는 이 그림을 어떻게 보았을까요."
+},
+{
+"id": "k2",
+"seconds": 45,
+"key": "선행연구 세 갈래 · 이 글의 판단",
+"script": "세 연구자의 견해와 이 글의 판단을 차례로 말합니다.",
+"transition": "결론으로 가겠습니다."
+},
+{
+"id": "a2",
+"seconds": 25,
+"key": "결론 · 남은 과제",
+"script": "결론을 정리하고 토론 거리를 드립니다. 감사합니다.",
+"transition": ""
+},
+{
+"id": "p1",
+"seconds": 0,
+"key": "질의응답 참고 · 선행연구 목록",
+"script": "질의응답 참고.",
+"transition": ""
+}
+]
+</script>
+
+<div class="toc" id="toc"></div>
+<div class="pager" aria-label="장 넘김">
+<span class="pg" id="pg">1 / 1</span>
+<button type="button" id="prevBtn" aria-label="이전 장">‹</button>
+<button type="button" id="nextBtn" class="next" aria-label="다음 장">›</button>
+</div>
+
+<script>
+const units = [...document.querySelectorAll('.slide')];
+const toc = document.getElementById('toc');
+toc.innerHTML = units.map((u, i) => `<button type="button" data-go="${u.id}">${i + 1}. ${u.dataset.title}</button>`).join('');
+const tbs = [...toc.querySelectorAll('button')];
+function current() {
+  let at = 0; const mid = window.innerHeight * 0.45;
+  units.forEach((u, i) => { if (u.getBoundingClientRect().top <= mid) at = i; });
+  return at;
+}
+function mark() {
+  const at = current();
+  tbs.forEach((b, i) => b.classList.toggle('on', i === at));
+  document.getElementById('pg').textContent = (at + 1) + ' / ' + units.length;
+  document.getElementById('prevBtn').disabled = at === 0;
+  document.getElementById('nextBtn').disabled = at === units.length - 1;
+  document.getElementById('nowTitle').textContent = at === 0 ? '' : units[at].dataset.title;
+}
+function goTo(i) {
+  i = Math.max(0, Math.min(units.length - 1, i));
+  units[i].scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+addEventListener('scroll', mark, { passive: true });
+addEventListener('resize', mark, { passive: true });
+mark();
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]');
+  if (!g) return;
+  goTo(units.findIndex(u => u.id === g.dataset.go));
+  toc.classList.remove('open');
+});
+document.getElementById('tocBtn').addEventListener('click', e => { toc.classList.toggle('open'); e.currentTarget.blur(); });
+document.getElementById('prevBtn').addEventListener('click', e => { goTo(current() - 1); e.currentTarget.blur(); });
+document.getElementById('nextBtn').addEventListener('click', e => { goTo(current() + 1); e.currentTarget.blur(); });
+const cleanBtn = document.getElementById('cleanBtn');
+function toggleClean() { const on = document.body.classList.toggle('clean'); cleanBtn.textContent = on ? '띠 보이기' : '띠 숨기기'; }
+cleanBtn.addEventListener('click', e => { toggleClean(); e.currentTarget.blur(); });
+addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if (k === ' ' && e.target.closest('button')) return;
+  if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); goTo(current() + 1); }
+  else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); goTo(current() - 1); }
+  else if (k === 'Home') { e.preventDefault(); goTo(0); }
+  else if (k === 'End') { e.preventDefault(); goTo(units.length - 1); }
+  else if (k === 'Escape') toc.classList.remove('open');
+  else if (k === 'h' || k === 'H') toggleClean();
+});
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} }
+};
+let zoom = Math.min(1.6, Math.max(0.7, Number(store.get('my-talk.zoom')) || 1));
+function setZoom(z) {
+  zoom = Math.min(1.6, Math.max(0.7, Math.round(z * 20) / 20));
+  document.documentElement.style.setProperty('--zoom', zoom);
+  store.set('my-talk.zoom', zoom);
+  mark();
+}
+setZoom(zoom);
+document.getElementById('zoomIn').addEventListener('click', () => setZoom(zoom + 0.05));
+document.getElementById('zoomOut').addEventListener('click', () => setZoom(zoom - 0.05));
+// 장 번호는 쪽 번호와 같게(표지 1 · 참고자료는 A B C 그대로)
+units.forEach((u, i) => { const n = u.querySelector('.s-head .n'); if (n && !/^[A-Z]$/.test(n.textContent.trim())) n.textContent = String(i + 1).padStart(2, '0'); });
+// 그림이 없으면 넣을 파일 이름을 보이는 자리로
+document.querySelectorAll('.fig img').forEach(img => img.addEventListener('error', () => {
+  const d = document.createElement('div'); d.className = 'none'; d.textContent = '그림 자리 · ' + (img.dataset.file || img.getAttribute('src')); img.replaceWith(d);
+}));
+// 주소 끝 #장id 로 그 장을 곧바로 연다
+function hashJump() { const i = units.findIndex(u => '#' + u.id === location.hash); if (i < 1) return;
+  const h = document.documentElement, sb = h.style.scrollBehavior; h.style.scrollBehavior = 'auto'; scrollTo(0, units[i].offsetTop); h.style.scrollBehavior = sb; mark(); }
+if (location.hash) { hashJump(); addEventListener('load', hashJump); }
+
+// ── 오른쪽 「핵심」 칸 · 발표자 원고 · 원고 창(노트북용) ──
+const notes = JSON.parse(document.getElementById('presenterData').textContent);
+const noteOf = id => notes.find(n => n.id === id) || { seconds: 0, key: '', script: '', transition: '' };
+const clock = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+const starts = []; let total = 0; units.forEach((u, i) => { starts[i] = total; total += noteOf(u.id).seconds; });
+units.forEach((u, i) => { if (u.id === 's0') return; const n = noteOf(u.id); if (!n.key) return;
+  const a = document.createElement('aside'); a.className = 'key';
+  a.innerHTML = '<div class="lb">핵심</div><p></p><div class="pg"></div>';
+  a.querySelector('p').textContent = n.key; a.querySelector('.pg').textContent = String(i + 1).padStart(2, '0') + ' / ' + units.length;
+  u.appendChild(a); });
+const timeText = i => { const n = noteOf(units[i].id); return n.seconds ? '배정 ' + n.seconds + '초 · ' + clock(starts[i]) + '~' + clock(starts[i] + n.seconds) + ' / 총 ' + clock(total) : '발표 시간 밖 · 질의응답 참고'; };
+const panel = document.getElementById('presenterPanel'), pBtn = document.getElementById('presenterBtn');
+let pLast = -1;
+function updatePanel(force) { const at = current(); if (!force && at === pLast) return; pLast = at; const n = noteOf(units[at].id);
+  document.getElementById('pTitle').textContent = (at + 1) + ' / ' + units.length + ' · ' + units[at].dataset.title;
+  document.getElementById('pTime').textContent = timeText(at);
+  document.getElementById('pScript').textContent = n.script; document.getElementById('pTrans').textContent = n.transition || '없음'; }
+function togglePanel(open = panel.hidden) { panel.hidden = !open; pBtn.setAttribute('aria-expanded', String(open)); pBtn.textContent = open ? '원고 닫기' : '발표자 원고'; updatePanel(true); }
+pBtn.addEventListener('click', e => { togglePanel(); e.currentTarget.blur(); });
+document.getElementById('pClose').addEventListener('click', () => togglePanel(false));
+addEventListener('scroll', () => updatePanel(), { passive: true });
+// 덱 창과 원고 창은 같은 주소 · BroadcastChannel 로 지금 장을 주고받음
+const chan = ('BroadcastChannel' in window) ? new BroadcastChannel('my-talk-deck') : null;
+const isNotes = new URLSearchParams(location.search).get('notes') === '1';
+if (!isNotes) {
+  let sent = -1;
+  const send = () => { const at = current(); if (at !== sent && chan) { sent = at; chan.postMessage({ type: 'at', at }); } };
+  addEventListener('scroll', send, { passive: true }); send();
+  if (chan) chan.onmessage = e => { const m = e.data || {};
+    if (m.type === 'go') goTo(m.at); else if (m.type === 'step') goTo(current() + m.d); else if (m.type === 'hello') { sent = -1; send(); } };
+  document.getElementById('notesBtn').addEventListener('click', e => { e.currentTarget.blur();
+    const w = window.open(location.pathname + '?notes=1', 'my-talk-notes', 'width=1100,height=760');
+    if (!w) alert('팝업이 막혔습니다. 주소창 오른쪽의 팝업 차단 표시를 눌러 허용한 뒤 다시 누르십시오.'); });
+} else {
+  document.documentElement.classList.add('notes'); document.title = '원고 창 · ' + document.title;
+  let at = 0;
+  const show = i => { at = Math.max(0, Math.min(units.length - 1, i)); const n = noteOf(units[at].id);
+    document.getElementById('nTitle').textContent = (at + 1) + ' / ' + units.length + ' · ' + units[at].dataset.title;
+    document.getElementById('nTime').textContent = timeText(at);
+    document.getElementById('nKey').textContent = n.key || '';
+    document.getElementById('nScript').textContent = n.script;
+    document.getElementById('nTrans').textContent = n.transition || '없음';
+    document.getElementById('nNext').textContent = at < units.length - 1 ? '다음 장: ' + (at + 2) + '. ' + units[at + 1].dataset.title : '마지막 장'; };
+  const step = d => { if (chan) chan.postMessage({ type: 'step', d }); else show(at + d); };
+  if (chan) { chan.onmessage = e => { const m = e.data || {}; if (m.type === 'at') show(m.at); }; chan.postMessage({ type: 'hello' }); }
+  show(0);
+  document.getElementById('nPrev').addEventListener('click', () => step(-1));
+  document.getElementById('nNextBtn').addEventListener('click', () => step(1));
+  addEventListener('keydown', e => { if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); e.stopImmediatePropagation(); step(1); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); e.stopImmediatePropagation(); step(-1); } }, true);
+  let t0 = 0, run = false, acc = 0, timer = null; const cBtn = document.getElementById('nClockBtn');
+  const tick = () => { const s = Math.floor((acc + (run ? Date.now() - t0 : 0)) / 1000); const c = document.getElementById('nClock'); c.textContent = clock(s); c.style.color = s > total ? '#ff8a73' : ''; };
+  cBtn.addEventListener('click', () => { if (run) { acc += Date.now() - t0; run = false; cBtn.textContent = '시계 계속'; clearInterval(timer); } else { t0 = Date.now(); run = true; cBtn.textContent = '시계 멈춤'; timer = setInterval(tick, 500); } tick(); });
+  document.getElementById('nClockReset').addEventListener('click', () => { acc = 0; t0 = Date.now(); tick(); });
+}
+addEventListener('keydown', e => { if (isNotes || e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'p' || e.key === 'P') { e.preventDefault(); togglePanel(); } if (e.key === 'Escape' && !panel.hidden) togglePanel(false); });
+</script>
+</body>
+</html>
