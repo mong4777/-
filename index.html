@@ -20,17 +20,7 @@
 <h1>나만의 저장소</h1>
 <p id="msg" class="err"></p>
 
-<section id="auth">
-  <h2>로그인</h2>
-  <input id="email" type="email" placeholder="이메일" autocomplete="username">
-  <input id="password" type="password" placeholder="비밀번호 (6자 이상)" autocomplete="current-password">
-  <button id="login">로그인</button>
-  <button id="signup">회원가입</button>
-</section>
-
-<div id="app" class="hide">
-  <p><span id="who"></span> <button id="logout">로그아웃</button></p>
-
+<div id="app">
   <section>
     <h2>메모</h2>
     <input id="title" placeholder="제목">
@@ -52,29 +42,12 @@
 <script>
 const $ = id => document.getElementById(id);
 const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-let user = null;
 
 const say = m => $('msg').textContent = m || '';
 const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-async function auth(fn) {
-  say();
-  const { error } = await fn({ email: $('email').value, password: $('password').value });
-  if (error) say(error.message);
-}
-$('login').onclick = () => auth(c => sb.auth.signInWithPassword(c));
-$('signup').onclick = async () => {
-  await auth(c => sb.auth.signUp(c));
-  if (!$('msg').textContent) say('가입 완료. 이메일 확인이 필요하면 메일함을 확인하세요.');
-};
-$('logout').onclick = () => sb.auth.signOut();
-
-sb.auth.onAuthStateChange((_e, session) => {
-  user = session?.user ?? null;
-  $('auth').classList.toggle('hide', !!user);
-  $('app').classList.toggle('hide', !user);
-  if (user) { $('who').textContent = user.email; loadNotes(); loadFiles(); }
-});
+loadNotes();
+loadFiles();
 
 async function loadNotes() {
   const { data, error } = await sb.from('notes').select('*').order('created_at', { ascending: false });
@@ -95,16 +68,16 @@ $('addNote').onclick = async () => {
 };
 
 async function loadFiles() {
-  const { data, error } = await sb.storage.from('files').list(user.id, { sortBy: { column: 'created_at', order: 'desc' } });
+  const { data, error } = await sb.storage.from('files').list('', { sortBy: { column: 'created_at', order: 'desc' } });
   if (error) return say(error.message);
   $('files').innerHTML = data.map(f =>
     `<li><span class="item">${esc(f.name)}</span><span><button data-n="${esc(f.name)}" class="dl">다운로드</button> <button data-n="${esc(f.name)}" class="delFile">삭제</button></span></li>`).join('');
   document.querySelectorAll('.dl').forEach(b => b.onclick = async () => {
-    const { data, error } = await sb.storage.from('files').createSignedUrl(`${user.id}/${b.dataset.n}`, 60);
+    const { data, error } = await sb.storage.from('files').createSignedUrl(`${b.dataset.n}`, 60);
     if (error) say(error.message); else window.open(data.signedUrl, '_blank');
   });
   document.querySelectorAll('.delFile').forEach(b => b.onclick = async () => {
-    const { error } = await sb.storage.from('files').remove([`${user.id}/${b.dataset.n}`]);
+    const { error } = await sb.storage.from('files').remove([`${b.dataset.n}`]);
     if (error) say(error.message); else loadFiles();
   });
 }
@@ -113,7 +86,7 @@ $('upload').onclick = async () => {
   const f = $('file').files[0];
   if (!f) return say('파일을 선택하세요.');
   const name = `${Date.now()}_${f.name.replace(/[^\w.\-]+/g, '_')}`;
-  const { error } = await sb.storage.from('files').upload(`${user.id}/${name}`, f);
+  const { error } = await sb.storage.from('files').upload(name, f);
   if (error) return say(error.message);
   $('file').value = '';
   loadFiles();
