@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="참부모론 해설 총서 · 꿈에도 그리던 꿈 · 성화학생용">
+<title>참부모론 해설 · 총서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700;900&display=swap">
+<style>
+/* 슬라이드 스킬 2 견본 덱 · 행사 포스터 테마 · 장마다 오른쪽 「핵심」 칸 · 발표자 원고 · 원고 창
+   · 바꾸는 자리 셋: ①:root 색·글꼴 ②<section class="slide"> 본문 ③presenterData JSON
+   · 넘김·차례·글자 크기·띠 숨기기·핵심 칸·원고 칸·원고 창 코드는 손대지 않음
+   · 덱마다 맨 아래 store 열쇠(tp-intro.zoom)와 BroadcastChannel 이름(tp-intro-deck)만 바꿈 */
+/* 참부모론 해설 총서 · 포스터 테마(보라 그라데이션 · 파스텔 · 무지개 글자) */
+:root{
+  --bg:#f1e8fb; --bg2:#e6d6f6; --card:rgba(255,255,255,.74); --card2:#ffffff;
+  --ink:#2a1356; --muted:#5d4690; --faint:#6f5a9b; --hair:rgba(42,19,86,.2);
+  --red:#c2306f; --red-soft:rgba(194,48,111,.14); --paper:#ffffff;
+  --display:"Jua","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",sans-serif;
+  --han:"Noto Serif KR","Batang","AppleMyungjo",serif;
+  --zoom:1;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{font-size:calc(clamp(12px, min(1.12vw, 1.98vh), 24px) * var(--zoom));scroll-snap-type:y mandatory;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all}
+::selection{background:var(--red);color:#fff}
+a{color:inherit}
+/* ── 위 띠 ── */
+.top{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:2rem;
+  padding:1rem 6vw .8rem;font-size:.74rem;letter-spacing:.24em;color:var(--faint);font-weight:700;pointer-events:none;
+  background:linear-gradient(180deg,var(--bg) 60%,rgba(21,18,15,0))}
+.top b{color:var(--muted)}
+.top .now{letter-spacing:.06em;color:var(--muted);margin-right:15rem}
+/* ── 장 ── */
+.slide{height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:center;
+  padding:4.4rem 6vw 4.2rem;overflow:hidden;position:relative}
+.slide>*{flex:none}
+.s-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:.9rem}
+.s-head .n{font-size:.9rem;color:var(--red);font-weight:900;letter-spacing:.18em}
+.s-head .line{flex:1;height:2px;background:var(--hair)}
+.s-head .t{font-size:.8rem;color:var(--red);letter-spacing:.24em;font-weight:900}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;color:var(--ink);letter-spacing:-.01em;line-height:1.15}
+h2{font-size:3rem;margin-bottom:1.3rem}
+h2 em,h1 em{font-style:normal;color:var(--red)}
+h2 small{font-family:var(--sans);font-size:1rem;color:var(--faint);font-weight:500;margin-left:.8rem;letter-spacing:.02em}
+h3{font-size:.86rem;letter-spacing:.2em;color:var(--red);margin:0 0 .6rem;font-weight:900}
+.hj{font-family:var(--han)}
+/* 표지 */
+.cover{padding-left:7vw;padding-right:7vw}
+.cover .eyebrow{display:flex;justify-content:space-between;font-size:.95rem;letter-spacing:.32em;font-weight:900;color:var(--muted);margin-bottom:2.2rem}
+.cover h1{font-size:6.2rem;line-height:1.08;margin-bottom:1.6rem}
+.cover .lede{font-size:1.5rem;color:var(--muted);margin:0 0 2.4rem;max-width:34em;line-height:1.6}
+.cover .rule{height:3px;background:var(--ink);opacity:.9;margin:0 0 1.4rem}
+.cover .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
+.cover .who{font-size:1.5rem;font-weight:900}
+.cover .who span{display:block;font-size:.95rem;font-weight:500;color:var(--faint);letter-spacing:.06em;margin-top:.2rem}
+.cover .when{text-align:right}
+.cover .when b{display:block;font-family:var(--display);font-weight:400;font-size:3.4rem;color:var(--red);line-height:1}
+.cover .when span{font-size:1.15rem;font-weight:900}
+.seal{position:absolute;display:grid;place-items:center;background:var(--red);color:var(--paper);font-family:var(--han);font-weight:900;
+  border-radius:.5rem;box-shadow:0 0 0 .35rem var(--bg),0 0 0 .6rem rgba(241,235,223,.18);transform:rotate(-7deg);line-height:1}
+.cover .seal{right:8vw;top:16vh;width:12rem;height:12rem;font-size:8.4rem}
+.cover .seal-cap{position:absolute;right:8vw;top:calc(16vh + 14rem);width:12rem;text-align:center;font-family:var(--han);font-size:1.5rem;font-weight:900;letter-spacing:.5em;color:var(--ink)}
+.case-no{align-self:flex-start;display:inline-block;font-size:.9rem;letter-spacing:.26em;font-weight:900;color:var(--red);border:2px solid var(--red);padding:.3rem .8rem;margin-bottom:1.4rem}
+/* 간지 */
+.divider{padding-left:9vw}
+.divider .no{font-family:var(--display);font-size:11rem;line-height:.9;color:var(--red)}
+.divider h1{font-size:5rem;margin:.6rem 0 1rem}
+.divider .sub{font-size:1.5rem;color:var(--muted);margin:0}
+.divider .seal{right:9vw;top:50%;width:9rem;height:9rem;font-size:6rem;margin-top:-4.5rem}
+/* 글 */
+.big{font-size:2rem;font-weight:900;line-height:1.5;margin:0 0 1.2rem;letter-spacing:-.01em}
+.big em{font-style:normal;color:var(--red)}
+.lead{font-size:1.25rem;color:var(--muted);margin:0 0 1rem;line-height:1.6}
+ul.pts{list-style:none;margin:0;padding:0}
+ul.pts li{font-size:1.45rem;line-height:1.6;padding:.45rem 0 .45rem 1.7rem;position:relative}
+ul.pts li::before{content:"";position:absolute;left:.2rem;top:1.05em;width:.6rem;height:.6rem;background:var(--red)}
+ul.pts li b{color:var(--red);font-weight:900}
+ul.pts li span{display:block;font-size:.76em;color:var(--muted);font-weight:400}
+ul.pts.sm li{font-size:1.22rem;padding:.3rem 0 .3rem 1.6rem}
+.note{font-size:.95rem;color:var(--faint);margin:1rem 0 0;line-height:1.55}
+.note b{color:var(--muted)}
+/* 한문 인용 칸 */
+.han{background:var(--card);border-left:.45rem solid var(--red);padding:1rem 1.4rem;margin:0 0 1rem}
+.han .h{font-family:var(--han);font-size:1.7rem;font-weight:700;line-height:1.6;letter-spacing:.05em}
+.han .h b{color:var(--red);font-weight:900}
+.han .e{font-size:.92rem;color:var(--faint);margin:.15rem 0 .45rem;letter-spacing:.02em}
+.han .k{font-size:1.2rem;line-height:1.6;color:var(--muted)}
+.han .src{display:block;font-size:.82rem;color:var(--faint);margin-top:.4rem;letter-spacing:.04em}
+.han.sm .h{font-size:1.38rem}.han.sm .k{font-size:1.05rem}
+.han.big-h .h{font-size:2.4rem}
+/* 칸 */
+.card{background:var(--card);padding:1.1rem 1.3rem;border-top:.35rem solid var(--ink)}
+.card.r{border-top-color:var(--red)}
+.card h3{margin-bottom:.4rem}
+.card .nm{font-family:var(--display);font-size:1.8rem;line-height:1.2;margin-bottom:.5rem}
+.card .nm small{font-family:var(--sans);font-size:.9rem;color:var(--faint);margin-left:.4rem}
+.card p{margin:0 0 .4rem;font-size:1.12rem;line-height:1.55}
+.card p.m{color:var(--muted);font-size:1rem}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3.5vw;align-items:start}
+.two.l{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+.two.r{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+.two.mid{align-items:center}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}
+.four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.five{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.9rem}
+/* 그림 */
+.fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.fig img{display:block;max-width:100%;max-height:56vh;object-fit:contain;background:var(--paper);padding:.45rem;border-radius:.2rem}
+.fig.tall img{max-height:64vh}
+.fig.short img{max-height:40vh}
+.fig.wide img{max-height:30vh}
+.fig figcaption{font-size:.82rem;color:var(--faint);text-align:center;line-height:1.4}
+.fig .none{display:grid;place-items:center;width:20rem;height:14rem;background:var(--card2);color:var(--faint);font-size:.9rem;padding:1rem;text-align:center}
+/* 표 */
+table{width:100%;border-collapse:collapse;font-size:1.12rem}
+th,td{text-align:left;padding:.65rem .9rem .65rem 0;border-bottom:1px solid var(--hair);vertical-align:top;line-height:1.45}
+th{font-size:.76rem;letter-spacing:.18em;color:var(--red);font-weight:900;border-bottom:2px solid var(--ink)}
+td:first-child{font-weight:900;white-space:nowrap}
+td .hj,th .hj{font-size:1.05em}
+td.hot{color:var(--red);font-weight:900}
+table.sm{font-size:.98rem}table.sm th,table.sm td{padding:.5rem .7rem .5rem 0}
+/* 연표 */
+.time{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:3px solid var(--ink);margin-top:.6rem}
+.time div{padding:1.1rem 1.1rem 0 0;position:relative}
+.time div::before{content:"";position:absolute;top:-.62rem;left:0;width:.9rem;height:.9rem;background:var(--ink)}
+.time div.hot::before{background:var(--red)}
+.time b{display:block;font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1}
+.time div.hot b{color:var(--red)}
+.time i{display:block;font-style:normal;font-size:.85rem;letter-spacing:.16em;color:var(--faint);font-weight:900;margin:.2rem 0 .5rem}
+.time p{margin:0;font-size:1.05rem;line-height:1.5;color:var(--muted)}
+.time p strong{color:var(--ink)}
+/* 인물 흐름 */
+.cast .card{position:relative;padding-top:2.2rem}
+.cast .card .k{position:absolute;top:.7rem;left:1.3rem;font-size:.78rem;letter-spacing:.2em;color:var(--red);font-weight:900}
+.cast .card p{font-size:1rem}
+/* 대비 상자 */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:1.4rem;align-items:stretch}
+.vs .mid{display:grid;place-items:center;font-family:var(--display);font-size:2.2rem;color:var(--red)}
+.punch{font-family:var(--display);font-size:3.4rem;line-height:1.2;margin:.4rem 0 0}
+.punch em{font-style:normal;color:var(--red)}
+.tag{display:inline-block;font-size:.8rem;letter-spacing:.14em;font-weight:900;padding:.18rem .6rem;background:var(--red);color:#fff;margin-right:.5rem;vertical-align:.15em}
+.tag.o{background:transparent;color:var(--muted);border:1px solid var(--hair)}
+.moon{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:.4rem 0 1rem}
+.moon div{background:var(--card);padding:.9rem 1.1rem;text-align:center}
+.moon b{display:block;font-family:var(--display);font-weight:400;font-size:1.7rem}
+.moon span{font-size:1.05rem;color:var(--muted)}
+.end{align-items:flex-start}
+.end .tagline{position:absolute;left:6vw;right:6vw;bottom:4.2rem;display:flex;justify-content:space-between;border-top:3px solid var(--ink);padding-top:1rem;font-family:var(--display);font-size:1.6rem;color:var(--red)}
+.end .tagline span{font-family:var(--sans);font-size:.95rem;color:var(--faint);letter-spacing:.06em;align-self:center}
+/* 넘김 단추 · 도구 · 차례 */
+.pager{position:fixed;right:2vw;top:12px;z-index:50;display:flex;align-items:center;gap:.5rem;background:var(--card);border:1px solid var(--hair);border-radius:999px;padding:.35rem .4rem .35rem .9rem}
+.pager .pg{font-size:.9rem;color:var(--muted);min-width:4.6em;text-align:center}
+.pager button{width:2.6rem;height:2.6rem;border-radius:50%;border:1px solid var(--hair);background:transparent;color:var(--ink);font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 .15rem;font-family:inherit}
+.pager button:hover{border-color:var(--red);color:var(--red)}
+.pager button.next{background:var(--red);color:#fff;border-color:var(--red)}
+.pager button:disabled{opacity:.3;cursor:default}
+.tools{position:fixed;right:2vw;bottom:14px;z-index:50;display:flex;gap:.4rem;align-items:center}
+.tools button{font-family:inherit;font-size:.78rem;border:1px solid var(--hair);background:var(--card);color:var(--muted);border-radius:999px;padding:.35rem .8rem;cursor:pointer}
+.tools button:hover{color:var(--red);border-color:var(--red)}
+.tools .hint{font-size:.72rem;color:var(--faint);margin-left:.4rem}
+.toc{position:fixed;right:2vw;bottom:7vh;z-index:60;background:var(--card);border:1px solid var(--hair);border-radius:.8rem;padding:.8rem 1rem;display:none;grid-template-columns:1fr 1fr;gap:.1rem 1.4rem;max-height:80vh;overflow:auto}
+.toc.open{display:grid}
+.toc button{font-family:inherit;font-size:.86rem;text-align:left;background:none;border:0;color:var(--muted);padding:.3rem .4rem;cursor:pointer;border-radius:.3rem}
+.toc button:hover{background:var(--card2);color:var(--ink)}
+.toc button.on{color:var(--red);font-weight:900}
+button:focus-visible,a:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+body.clean .top,body.clean .pager,body.clean .tools{opacity:0;pointer-events:none}
+body.clean .tools:hover,body.clean .pager:hover{opacity:1;pointer-events:auto}
+@media (max-width:900px){
+  html{font-size:calc(15px * var(--zoom));scroll-snap-type:none}
+  .slide{height:auto;min-height:0;padding:8vh 5vw 5vh;overflow:visible}
+  .two,.two.l,.two.r,.three,.four,.five,.vs,.moon,.time{grid-template-columns:1fr}
+  .vs .mid{font-size:1.4rem}
+  .cover h1{font-size:3rem}.cover .seal,.cover .seal-cap,.divider .seal{display:none}
+  .divider .no{font-size:6rem}.divider h1{font-size:2.8rem}
+  h2{font-size:2.1rem}.punch{font-size:2.2rem}
+  .top{position:static;padding:1rem 5vw 0}.top .now{margin-right:0}.tools .hint{display:none}
+  .pager{top:auto;bottom:12px;right:12px}.tools{bottom:12px;left:12px;right:auto}.toc{left:12px;right:auto}
+  .end .tagline{position:static;margin-top:2rem}
+  table{display:block;overflow-x:auto}
+}
+/* ── 오른쪽 「핵심」 칸(장마다 · presenterData 의 key 에서 만듦) ── */
+:root{--keyw:17rem}
+.slide{padding-right:calc(var(--keyw) + 5vw)}
+.slide.cover{padding-right:7vw}
+.divider .seal{right:calc(var(--keyw) + 8vw)}
+.key{position:absolute;right:2.4vw;top:5.2rem;bottom:4.8rem;width:var(--keyw);display:flex;flex-direction:column;justify-content:center;border-left:2px solid var(--hair);padding-left:1.4rem}
+.key .lb{font-size:.76rem;letter-spacing:.26em;color:var(--red);font-weight:900;margin-bottom:.9rem}
+.key p{font-family:var(--display);font-size:1.75rem;line-height:1.35;margin:0;color:var(--ink);word-break:keep-all}
+.key .pg{font-size:.8rem;color:var(--faint);margin-top:1.2rem;letter-spacing:.1em}
+/* ── 발표자 원고 칸(P) ── */
+.presenter-panel[hidden]{display:none!important}
+.presenter-panel{position:fixed;left:3vw;bottom:4rem;z-index:70;width:min(50rem,90vw);max-height:56vh;overflow:auto;background:var(--card2);color:var(--ink);border:1px solid var(--red);border-radius:.6rem;box-shadow:0 .8rem 3rem rgba(0,0,0,.5);padding:1.1rem 1.4rem;font-size:17px;line-height:1.8}
+.presenter-panel header{display:flex;align-items:start;justify-content:space-between;gap:1rem}
+.presenter-panel h4{font-size:1.05em;margin:0;color:var(--red)}
+.presenter-panel .ptime{font-size:.85em;color:var(--muted);margin:.2rem 0 .6rem}
+.presenter-panel p{margin:.5rem 0}
+.presenter-panel .ptrans{border-top:1px solid var(--hair);padding-top:.6rem;color:var(--muted)}
+.presenter-panel button{font:inherit;font-size:.85em;color:var(--ink);background:transparent;border:1px solid var(--hair);border-radius:.4rem;cursor:pointer;padding:.2rem .7rem}
+/* ── 원고 창(?notes=1 · 노트북 화면용) ── */
+html.notes{scroll-snap-type:none;font-size:18px}
+html.notes body>*:not(#notesView){display:none!important}
+#notesView{display:none}
+html.notes #notesView{display:grid;grid-template-rows:auto auto 1fr auto;gap:1rem;min-height:100vh;padding:1.4rem 2rem;max-width:70rem;margin:0 auto}
+#notesView .nbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;border-bottom:2px solid var(--ink);padding-bottom:.8rem}
+#notesView .nbar b{font-family:var(--display);font-weight:400;font-size:1.6rem}
+#notesView .nbar span{color:var(--muted)}
+#notesView .clock{font-family:var(--display);font-size:2rem;color:var(--red)}
+#notesView .nkey{background:var(--card);border-left:.4rem solid var(--red);padding:.8rem 1.1rem;font-size:1.15rem;font-weight:700}
+#notesView .nkey i{font-style:normal;font-size:.75rem;letter-spacing:.2em;color:var(--red);display:block}
+#notesView .nscript{font-size:1.75rem;line-height:1.85;margin:0}
+#notesView .ntrans{color:var(--muted);font-size:1.2rem;margin:0}
+#notesView .ntrans b{color:var(--red)}
+#notesView .nfoot{display:flex;gap:.8rem;align-items:center;border-top:1px solid var(--hair);padding-top:.8rem;flex-wrap:wrap}
+#notesView .nfoot button{font:inherit;font-size:1rem;font-weight:900;border:1px solid var(--hair);background:var(--card);color:var(--ink);border-radius:999px;padding:.5rem 1.2rem;cursor:pointer}
+#notesView .nfoot button.next{background:var(--red);border-color:var(--red);color:#fff}
+#notesView .nfoot small{color:var(--faint);margin-left:auto}
+#notesView .nnext{color:var(--faint);font-size:1rem}
+@media (max-width:900px){.slide{padding-right:5vw}.key{position:static;width:auto;border-left:0;border-top:2px solid var(--hair);padding:1rem 0 0;margin-top:1.4rem}.divider .seal{display:none}}
+@media print{.presenter-panel{display:none!important}}
+@media print{.top,.pager,.tools,.toc{display:none}.slide{height:auto;page-break-after:always;overflow:visible}}
+
+/* ── 포스터 테마 덧칠 ── */
+body{background:#e6d6f6}
+.slide{background:linear-gradient(180deg,#f7f0fd 0%,#eadcf8 100%)}
+.cover,.divider,.end{color:#fff;--ink:#ffffff;--muted:#eadbfb;--faint:#d6c0f3;--hair:rgba(255,255,255,.32);--card:rgba(255,255,255,.16);--red:#ffd45e;--paper:#3a1b74;
+  background:linear-gradient(180deg,#3b1c78 0%,#6a3fb0 55%,#9a6fd6 100%)}
+.top{background:linear-gradient(180deg,rgba(247,240,255,.96) 55%,rgba(247,240,255,0))}
+.top b{color:#2a1356}
+h2 em,h1 em,.punch em,.big em{font-style:normal;color:var(--red)}
+.rainbow,.cover h1 em{background:linear-gradient(90deg,#ff7aa2,#ffb454,#ffe66d,#86e8a8,#63cbff,#b690ff);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.cover .seal{background:#ffd45e;color:#3a1b74;box-shadow:0 0 0 .35rem #6a3fb0,0 0 0 .6rem rgba(255,255,255,.35)}
+.cover .case-no{color:#ffd45e;border-color:#ffd45e}
+.cover .rule{background:#fff}
+.card{border-top-color:var(--red);box-shadow:0 .5rem 1.4rem rgba(74,37,137,.12);border-radius:.4rem}
+.end .card{box-shadow:none}
+.star{position:absolute;color:#ffd45e;pointer-events:none;line-height:1}
+.star.p{color:#ff9fc4}
+.bars{position:absolute;left:54vw;top:17vh;display:flex;align-items:flex-end;gap:.7rem;pointer-events:none}
+.bars i{display:block;width:2.6rem;border-radius:.4rem .4rem 0 0}
+.bars i:nth-child(1){height:3rem;background:#ffe28a}.bars i:nth-child(2){height:4.6rem;background:#a8e6c1}
+.bars i:nth-child(3){height:6.4rem;background:#9fd3ff}.bars i:nth-child(4){height:8.4rem;background:#ffb3d1}
+.cover .meta{position:relative;z-index:1}
+/* 꿈 세 칸 · 한 줄 */
+.stack{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem;margin:1.2rem 0 1rem}
+.stack .card .nm{font-size:1.7rem}
+/* 성취 과정 · 오르는 막대 */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;align-items:end;height:19rem;margin:.6rem 0 .8rem}
+.steps div{border-radius:.9rem .9rem .3rem .3rem;padding:1rem 1.1rem;display:flex;flex-direction:column;justify-content:flex-end;color:#2a1356;box-shadow:0 .5rem 1.4rem rgba(74,37,137,.14)}
+.steps div:nth-child(1){height:9.5rem;background:#ffe28a}.steps div:nth-child(2){height:12.5rem;background:#a8e6c1}
+.steps div:nth-child(3){height:15.5rem;background:#9fd3ff}.steps div:nth-child(4){height:19rem;background:#ffb3d1}
+.steps b{font-family:var(--display);font-weight:400;font-size:1.05rem;letter-spacing:.06em;margin-bottom:.35rem}
+.steps p{margin:0;font-size:1.2rem;font-weight:700;line-height:1.4}
+.end .tagline{color:#ffd45e;right:calc(var(--keyw) + 5vw)}
+.end .tagline span{color:#eadbfb}
+</style>
+</head>
+<body>
+<div class="top"><span><b>참부모론 해설</b> · 총서 · 꿈에도 그리던 꿈</span><span class="now" id="nowTitle"></span></div>
+
+<!-- ══════════ 표지 ══════════ -->
+<section class="slide cover" id="s0" data-title="표지">
+<span class="star" style="right:26vw;top:14vh;font-size:3rem" aria-hidden="true">✦</span>
+<span class="star p" style="right:11vw;top:60vh;font-size:2.2rem" aria-hidden="true">✦</span>
+<div class="eyebrow"><span>참부모론 해설 · 성화학생용 강의안</span></div>
+<div class="case-no">총서</div>
+<h1>꿈에도 그리던 <em>꿈</em></h1>
+<p class="lede">하늘부모님의 꿈과 나의 꿈</p>
+<div class="rule"></div>
+<div class="meta"><div class="who">참부모론 해설<span>강의안 · 총서</span></div><div class="when"><b>총서</b><span>성화학생용</span></div></div>
+<div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="seal" aria-hidden="true">夢</div><div class="seal-cap" aria-hidden="true">꿈</div>
+</section>
+
+<!-- ══════════ 도입 ══════════ -->
+<section class="slide" id="c1" data-title="도입. 나의 꿈">
+<div class="s-head"><span class="n">02</span><span class="line"></span><span class="t">도입</span></div>
+<h2>도입 <small>나의 꿈</small></h2>
+<p class="punch">여러분의 <em>꿈</em>은 무엇인가요?</p>
+<div class="stack">
+<div class="card"><h3>01 개인</h3><p class="nm" style="font-size:1.5rem">나의 꿈</p><p>장래희망 · 이루고 싶은 목표 · 버킷리스트</p></div>
+<div class="card"><h3>02 가족</h3><p class="nm" style="font-size:1.5rem">부모님의 바람</p><p>가족을 향한 부모님의 마음</p></div>
+<div class="card"><h3>03 나라와 인류</h3><p class="nm" style="font-size:1.5rem">평화</p><p>나라와 인류의 평화를 바라는 마음</p></div>
+</div>
+<p class="note"><b>꿈은 사람을 움직이는 힘</b></p>
+</section>
+
+<section class="slide" id="c2" data-title="도입. 하늘부모님의 꿈">
+<div class="s-head"><span class="n">03</span><span class="line"></span><span class="t">도입</span></div>
+<h2>도입 <small>하늘부모님의 꿈</small></h2>
+<p class="punch">그런데 하늘부모님에게도<br><em>꿈</em>이 있다면?</p>
+<div class="card r" style="margin:1rem 0 1.2rem"><h3>하늘부모님이 꿈에도 그리던 꿈</h3><p style="font-size:1.4rem;font-weight:900">인류가 «꿈에도» 몰랐던 하늘부모님의 꿈 소개</p></div>
+<div class="three">
+<div class="card"><h3>01</h3><p>꿈에도 몰랐던 사실</p></div>
+<div class="card"><h3>02</h3><p>하늘부모님이 그리던 꿈</p></div>
+<div class="card"><h3>03</h3><p>그 꿈의 성취 과정</p></div>
+</div>
+</section>
+
+<!-- ══════════ 본론 ══════════ -->
+<section class="slide" id="b1" data-title="본론 1. 꿈에도 몰랐던 사실">
+<div class="s-head"><span class="n">04</span><span class="line"></span><span class="t">본론 1</span></div>
+<h2>꿈에도 몰랐던 <em>사실</em></h2>
+<p class="big">창조주 하늘부모님은 <em>인류의 부모</em></p>
+<div class="vs" style="margin-bottom:1.2rem">
+<div class="card r"><h3>하늘부모님</h3><p class="nm">인류의 부모</p><p>꿈과 심정이 있음</p></div>
+<div class="mid">對</div>
+<div class="card"><h3>인류</h3><p class="nm">철부지 자녀</p><p>부모의 마음을 모른 채 도움만 구함</p></div>
+</div>
+<div class="card"><h3>그 결과</h3><p style="font-size:1.45rem;font-weight:900">뿌리 없이 떠도는 부평초 같은 인생</p></div>
+</section>
+
+<section class="slide" id="b2" data-title="본론 2. 꿈에도 그리던 꿈">
+<div class="s-head"><span class="n">05</span><span class="line"></span><span class="t">본론 2</span></div>
+<h2>꿈에도 그리던 <em>꿈</em></h2>
+<p class="big">하늘부모님의 꿈 · 인간과 하나 되어 <em>같이 사는 것</em></p>
+<div class="two" style="gap:1.2rem 1.6rem">
+<div class="card r"><h3>01 함께 사는 집</h3><p class="nm">천주</p><p>하늘부모님이 함께 사는 집으로 지으심</p></div>
+<div class="card"><h3>02 한 남자와 한 여자</h3><p class="nm">천지인참부모</p><p>스스로 성장해 성혼</p></div>
+<div class="card"><h3>03 한 가족</h3><p class="nm">인류 한 가족 세계</p><p>하나 되어 함께 사는 인류</p></div>
+<div class="card r"><h3>04 이상</h3><p class="nm">참부모이상</p><p>하늘부모님이 꿈에도 그리던 세계</p></div>
+</div>
+</section>
+
+<section class="slide" id="b3" data-title="본론 3. 꿈의 성취 과정">
+<div class="s-head"><span class="n">06</span><span class="line"></span><span class="t">본론 3</span></div>
+<h2>꿈의 <em>성취 과정</em> <small>앞으로의 여정 미리 보기</small></h2>
+<div class="steps">
+<div><b>1~2장</b><p>창조와 타락</p></div>
+<div><b>3~4장</b><p>이스라엘 선민과 독생자 예수님</p></div>
+<div><b>5~7장</b><p>한민족 선민과 참부모님 현현</p></div>
+<div><b>8~9장</b><p>참부모님의 섭리와 천일국</p></div>
+</div>
+</section>
+
+<!-- ══════════ 마무리 ══════════ -->
+<section class="slide" id="e1" data-title="마무리. 꿈의 연결">
+<div class="s-head"><span class="n">07</span><span class="line"></span><span class="t">마무리</span></div>
+<h2>마무리 <small>꿈의 연결</small></h2>
+<p class="punch" style="font-size:2.9rem">나의 꿈과 하늘부모님의 꿈은<br>어떻게 <em>연결</em>되어 있을까?</p>
+<ul class="pts sm" style="margin-top:1rem">
+<li>도입에서 떠올린 <b>나의 꿈</b> 다시 생각</li>
+<li>인간의 모든 꿈은 결국 <b>하늘부모님의 꿈</b>에서 비롯</li>
+<li>두 꿈은 본질적으로 같음 · 사랑으로 함께 살며 행복을 이루는 것</li>
+</ul>
+</section>
+
+<section class="slide end" id="e2" data-title="마무리. 꿈의 주인공">
+<div class="s-head" style="width:100%"><span class="n">08</span><span class="line"></span><span class="t">마무리</span></div>
+<h2>마무리 <small>꿈의 주인공</small></h2>
+<div class="two" style="width:100%">
+<div class="card"><h3>앞으로의 강의에서 찾을 답</h3><p style="font-size:1.4rem;font-weight:900;line-height:1.55">나는 누구이고, 어디에 있으며, 무엇을 해야 하는가</p></div>
+<div class="card r"><h3>답</h3><p style="font-size:1.4rem;font-weight:900;line-height:1.55">하늘부모님의 꿈이 이루어질 때 나의 꿈도 참된 의미를 찾음</p></div>
+</div>
+<div class="tagline">나는 하늘부모님이 꿈에도 그리던 그 꿈의 주인공<span>참부모론 해설 · 총서</span></div>
+</section>
+
+<div class="tools">
+<button type="button" id="zoomOut" aria-label="글자 작게">글자 −</button>
+<button type="button" id="zoomIn" aria-label="글자 크게">글자 ＋</button>
+<button type="button" id="cleanBtn">띠 숨기기</button>
+<button type="button" id="tocBtn">차례</button>
+<button type="button" id="presenterBtn" aria-expanded="false">발표자 원고</button>
+<button type="button" id="notesBtn">원고 창</button>
+<span class="hint">← → 넘김 · H 띠 · P 원고</span>
+</div>
+<aside class="presenter-panel" id="presenterPanel" aria-label="발표자 원고" hidden>
+<header><div><h4 id="pTitle"></h4><div class="ptime" id="pTime"></div></div><button type="button" id="pClose">닫기</button></header>
+<p id="pScript"></p>
+<p class="ptrans"><b>다음 장 연결</b> · <span id="pTrans"></span></p>
+</aside>
+<main id="notesView" aria-label="발표자 원고 창">
+<div class="nbar"><div><b id="nTitle"></b><br><span id="nTime"></span></div><div class="clock" id="nClock">00:00</div></div>
+<div class="nkey"><i>핵심</i><span id="nKey"></span></div>
+<div><p class="nscript" id="nScript"></p><p class="ntrans"><b>다음 장 연결</b> · <span id="nTrans"></span></p><p class="nnext" id="nNext"></p></div>
+<div class="nfoot"><button type="button" id="nPrev">‹ 이전</button><button type="button" class="next" id="nNextBtn">다음 ›</button><button type="button" id="nClockBtn">시계 시작</button><button type="button" id="nClockReset">시계 0</button><small>덱 창과 함께 움직임 · ← → 로도 넘김</small></div>
+</main>
+<script type="application/json" id="presenterData">
+[
+ {
+  "id": "s0",
+  "seconds": 20,
+  "key": "참부모론 해설 총서",
+  "script": "안녕하세요. 참부모론 해설, 첫 시간 총서입니다. 오늘 제목은 「꿈에도 그리던 꿈」입니다. 먼저 여러분의 꿈부터 여쭙겠습니다.",
+  "transition": "먼저 여러분의 꿈입니다."
+ },
+ {
+  "id": "c1",
+  "seconds": 70,
+  "key": "꿈 · 사람을 움직이는 힘",
+  "script": "여러분의 꿈은 무엇인가요? 장래희망이나 이루고 싶은 목표, 버킷리스트를 떠올려 보셔도 좋습니다. 꿈은 개인에서 그치지 않습니다. 가족을 향한 부모님의 바람이 있고, 나라와 인류의 평화를 바라는 마음도 있습니다. 이렇게 꿈은 사람을 움직이는 힘입니다. 잠시 내 꿈 하나를 마음에 담아 두시기 바랍니다.",
+  "transition": "그런데 한 가지 물음이 남습니다."
+ },
+ {
+  "id": "c2",
+  "seconds": 60,
+  "key": "하늘부모님의 꿈 · 꿈에도 몰랐던 꿈",
+  "script": "그런데 하늘부모님에게도 꿈이 있다면 어떨까요? 인류가 꿈에도 몰랐던 꿈, 하늘부모님이 꿈에도 그리던 꿈이 있습니다. 오늘 이 꿈을 세 가지로 나누어 소개하겠습니다. 첫째 몰랐던 사실, 둘째 그리던 꿈, 셋째 그 꿈이 이루어져 온 과정입니다.",
+  "transition": "첫째, 우리가 꿈에도 몰랐던 사실부터 보겠습니다."
+ },
+ {
+  "id": "b1",
+  "seconds": 90,
+  "key": "인류의 부모 · 철부지 자녀 · 부평초 인생",
+  "script": "첫째, 우리가 꿈에도 몰랐던 사실입니다. 창조주 하늘부모님은 인류의 부모님이십니다. 그리고 부모님에게도 꿈과 심정이 있습니다. 그런데 우리는 부모의 마음을 모른 채 도움만 구하는 철부지 자녀였습니다. 그 결과 뿌리 없이 떠도는 부평초 같은 인생이 되었습니다. 그렇다면 하늘부모님이 꿈에도 그리던 꿈은 무엇일까요?",
+  "transition": "이제 그 꿈을 보겠습니다."
+ },
+ {
+  "id": "b2",
+  "seconds": 100,
+  "key": "함께 사는 집 · 인류 한 가족 · 참부모이상",
+  "script": "둘째, 하늘부모님이 꿈에도 그리던 꿈입니다. 하늘부모님은 인간과 하나 되어 같이 사는 것을 꿈꾸셨습니다. 그래서 천주를 함께 사는 집으로 지으셨습니다. 그 꿈에는 스스로 성장하여 성혼한 한 남자와 한 여자, 곧 천지인참부모가 있습니다. 그리고 인류 한 가족 세계가 있습니다. 이 전체를 참부모이상이라고 합니다.",
+  "transition": "그 꿈이 어떻게 이루어져 왔는지 보겠습니다."
+ },
+ {
+  "id": "b3",
+  "seconds": 110,
+  "key": "꿈의 성취 과정 · 네 단계 여정",
+  "script": "셋째, 그 꿈은 어떻게 이루어져 왔는가입니다. 앞으로의 여정을 미리 보겠습니다. 1장과 2장은 창조와 타락입니다. 3장과 4장은 이스라엘 선민과 독생자 예수님입니다. 5장부터 7장은 한민족 선민과 참부모님의 현현입니다. 마지막 8장과 9장은 참부모님의 섭리와 천일국입니다. 이 순서대로 하늘부모님의 꿈이 이루어져 온 과정을 따라가겠습니다.",
+  "transition": "이제 처음의 물음으로 돌아가겠습니다."
+ },
+ {
+  "id": "e1",
+  "seconds": 90,
+  "key": "나의 꿈 · 하늘부모님의 꿈에서 비롯",
+  "script": "나의 꿈과 하늘부모님의 꿈은 어떻게 연결되어 있을까요? 처음에 떠올리신 내 꿈을 다시 생각해 보십시오. 인간의 모든 꿈은 결국 하늘부모님의 꿈에서 비롯되었습니다. 그래서 나의 꿈과 하늘부모님의 꿈은 본질적으로 다르지 않습니다. 사랑으로 함께 살며 행복을 이루는 것, 그것이 두 꿈이 만나는 자리입니다.",
+  "transition": "남은 물음은 앞으로의 강의에서 찾겠습니다."
+ },
+ {
+  "id": "e2",
+  "seconds": 60,
+  "key": "꿈의 주인공 · 참된 의미",
+  "script": "앞으로의 강의에서는 나는 누구이고, 어디에 있으며, 무엇을 해야 하는가, 이 물음의 답을 함께 찾겠습니다. 답은 하나입니다. 하늘부모님의 꿈이 이루어질 때 나의 꿈도 참된 의미를 찾습니다. 나는 하늘부모님이 꿈에도 그리던 그 꿈의 주인공입니다. 감사합니다.",
+  "transition": ""
+ }
+]
+</script>
+
+<div class="toc" id="toc"></div>
+<div class="pager" aria-label="장 넘김">
+<span class="pg" id="pg">1 / 1</span>
+<button type="button" id="prevBtn" aria-label="이전 장">‹</button>
+<button type="button" id="nextBtn" class="next" aria-label="다음 장">›</button>
+</div>
+
+<script>
+const units = [...document.querySelectorAll('.slide')];
+const toc = document.getElementById('toc');
+toc.innerHTML = units.map((u, i) => `<button type="button" data-go="${u.id}">${i + 1}. ${u.dataset.title}</button>`).join('');
+const tbs = [...toc.querySelectorAll('button')];
+function current() {
+  let at = 0; const mid = window.innerHeight * 0.45;
+  units.forEach((u, i) => { if (u.getBoundingClientRect().top <= mid) at = i; });
+  return at;
+}
+function mark() {
+  const at = current();
+  tbs.forEach((b, i) => b.classList.toggle('on', i === at));
+  document.getElementById('pg').textContent = (at + 1) + ' / ' + units.length;
+  document.getElementById('prevBtn').disabled = at === 0;
+  document.getElementById('nextBtn').disabled = at === units.length - 1;
+  document.getElementById('nowTitle').textContent = at === 0 ? '' : units[at].dataset.title;
+}
+function goTo(i) {
+  i = Math.max(0, Math.min(units.length - 1, i));
+  units[i].scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+addEventListener('scroll', mark, { passive: true });
+addEventListener('resize', mark, { passive: true });
+mark();
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]');
+  if (!g) return;
+  goTo(units.findIndex(u => u.id === g.dataset.go));
+  toc.classList.remove('open');
+});
+document.getElementById('tocBtn').addEventListener('click', e => { toc.classList.toggle('open'); e.currentTarget.blur(); });
+document.getElementById('prevBtn').addEventListener('click', e => { goTo(current() - 1); e.currentTarget.blur(); });
+document.getElementById('nextBtn').addEventListener('click', e => { goTo(current() + 1); e.currentTarget.blur(); });
+const cleanBtn = document.getElementById('cleanBtn');
+function toggleClean() { const on = document.body.classList.toggle('clean'); cleanBtn.textContent = on ? '띠 보이기' : '띠 숨기기'; }
+cleanBtn.addEventListener('click', e => { toggleClean(); e.currentTarget.blur(); });
+addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if (k === ' ' && e.target.closest('button')) return;
+  if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); goTo(current() + 1); }
+  else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); goTo(current() - 1); }
+  else if (k === 'Home') { e.preventDefault(); goTo(0); }
+  else if (k === 'End') { e.preventDefault(); goTo(units.length - 1); }
+  else if (k === 'Escape') toc.classList.remove('open');
+  else if (k === 'h' || k === 'H') toggleClean();
+});
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} }
+};
+let zoom = Math.min(1.6, Math.max(0.7, Number(store.get('tp-intro.zoom')) || 1));
+function setZoom(z) {
+  zoom = Math.min(1.6, Math.max(0.7, Math.round(z * 20) / 20));
+  document.documentElement.style.setProperty('--zoom', zoom);
+  store.set('tp-intro.zoom', zoom);
+  mark();
+}
+setZoom(zoom);
+document.getElementById('zoomIn').addEventListener('click', () => setZoom(zoom + 0.05));
+document.getElementById('zoomOut').addEventListener('click', () => setZoom(zoom - 0.05));
+// 장 번호는 쪽 번호와 같게(표지 1 · 참고자료는 A B C 그대로)
+units.forEach((u, i) => { const n = u.querySelector('.s-head .n'); if (n && !/^[A-Z]$/.test(n.textContent.trim())) n.textContent = String(i + 1).padStart(2, '0'); });
+// 그림이 없으면 넣을 파일 이름을 보이는 자리로
+document.querySelectorAll('.fig img').forEach(img => img.addEventListener('error', () => {
+  const d = document.createElement('div'); d.className = 'none'; d.textContent = '그림 자리 · ' + (img.dataset.file || img.getAttribute('src')); img.replaceWith(d);
+}));
+// 주소 끝 #장id 로 그 장을 곧바로 연다
+function hashJump() { const i = units.findIndex(u => '#' + u.id === location.hash); if (i < 1) return;
+  const h = document.documentElement, sb = h.style.scrollBehavior; h.style.scrollBehavior = 'auto'; scrollTo(0, units[i].offsetTop); h.style.scrollBehavior = sb; mark(); }
+if (location.hash) { hashJump(); addEventListener('load', hashJump); }
+
+// ── 오른쪽 「핵심」 칸 · 발표자 원고 · 원고 창(노트북용) ──
+const notes = JSON.parse(document.getElementById('presenterData').textContent);
+const noteOf = id => notes.find(n => n.id === id) || { seconds: 0, key: '', script: '', transition: '' };
+const clock = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+const starts = []; let total = 0; units.forEach((u, i) => { starts[i] = total; total += noteOf(u.id).seconds; });
+units.forEach((u, i) => { if (u.id === 's0') return; const n = noteOf(u.id); if (!n.key) return;
+  const a = document.createElement('aside'); a.className = 'key';
+  a.innerHTML = '<div class="lb">핵심</div><p></p><div class="pg"></div>';
+  a.querySelector('p').textContent = n.key; a.querySelector('.pg').textContent = String(i + 1).padStart(2, '0') + ' / ' + units.length;
+  u.appendChild(a); });
+const timeText = i => { const n = noteOf(units[i].id); return n.seconds ? '배정 ' + n.seconds + '초 · ' + clock(starts[i]) + '~' + clock(starts[i] + n.seconds) + ' / 총 ' + clock(total) : '발표 시간 밖 · 질의응답 참고'; };
+const panel = document.getElementById('presenterPanel'), pBtn = document.getElementById('presenterBtn');
+let pLast = -1;
+function updatePanel(force) { const at = current(); if (!force && at === pLast) return; pLast = at; const n = noteOf(units[at].id);
+  document.getElementById('pTitle').textContent = (at + 1) + ' / ' + units.length + ' · ' + units[at].dataset.title;
+  document.getElementById('pTime').textContent = timeText(at);
+  document.getElementById('pScript').textContent = n.script; document.getElementById('pTrans').textContent = n.transition || '없음'; }
+function togglePanel(open = panel.hidden) { panel.hidden = !open; pBtn.setAttribute('aria-expanded', String(open)); pBtn.textContent = open ? '원고 닫기' : '발표자 원고'; updatePanel(true); }
+pBtn.addEventListener('click', e => { togglePanel(); e.currentTarget.blur(); });
+document.getElementById('pClose').addEventListener('click', () => togglePanel(false));
+addEventListener('scroll', () => updatePanel(), { passive: true });
+// 덱 창과 원고 창은 같은 주소 · BroadcastChannel 로 지금 장을 주고받음
+const chan = ('BroadcastChannel' in window) ? new BroadcastChannel('tp-intro-deck') : null;
+const isNotes = new URLSearchParams(location.search).get('notes') === '1';
+if (!isNotes) {
+  let sent = -1;
+  const send = () => { const at = current(); if (at !== sent && chan) { sent = at; chan.postMessage({ type: 'at', at }); } };
+  addEventListener('scroll', send, { passive: true }); send();
+  if (chan) chan.onmessage = e => { const m = e.data || {};
+    if (m.type === 'go') goTo(m.at); else if (m.type === 'step') goTo(current() + m.d); else if (m.type === 'hello') { sent = -1; send(); } };
+  document.getElementById('notesBtn').addEventListener('click', e => { e.currentTarget.blur();
+    const w = window.open(location.pathname + '?notes=1', 'tp-intro-notes', 'width=1100,height=760');
+    if (!w) alert('팝업이 막혔습니다. 주소창 오른쪽의 팝업 차단 표시를 눌러 허용한 뒤 다시 누르십시오.'); });
+} else {
+  document.documentElement.classList.add('notes'); document.title = '원고 창 · ' + document.title;
+  let at = 0;
+  const show = i => { at = Math.max(0, Math.min(units.length - 1, i)); const n = noteOf(units[at].id);
+    document.getElementById('nTitle').textContent = (at + 1) + ' / ' + units.length + ' · ' + units[at].dataset.title;
+    document.getElementById('nTime').textContent = timeText(at);
+    document.getElementById('nKey').textContent = n.key || '';
+    document.getElementById('nScript').textContent = n.script;
+    document.getElementById('nTrans').textContent = n.transition || '없음';
+    document.getElementById('nNext').textContent = at < units.length - 1 ? '다음 장: ' + (at + 2) + '. ' + units[at + 1].dataset.title : '마지막 장'; };
+  const step = d => { if (chan) chan.postMessage({ type: 'step', d }); else show(at + d); };
+  if (chan) { chan.onmessage = e => { const m = e.data || {}; if (m.type === 'at') show(m.at); }; chan.postMessage({ type: 'hello' }); }
+  show(0);
+  document.getElementById('nPrev').addEventListener('click', () => step(-1));
+  document.getElementById('nNextBtn').addEventListener('click', () => step(1));
+  addEventListener('keydown', e => { if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); e.stopImmediatePropagation(); step(1); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); e.stopImmediatePropagation(); step(-1); } }, true);
+  let t0 = 0, run = false, acc = 0, timer = null; const cBtn = document.getElementById('nClockBtn');
+  const tick = () => { const s = Math.floor((acc + (run ? Date.now() - t0 : 0)) / 1000); const c = document.getElementById('nClock'); c.textContent = clock(s); c.style.color = s > total ? '#ff8a73' : ''; };
+  cBtn.addEventListener('click', () => { if (run) { acc += Date.now() - t0; run = false; cBtn.textContent = '시계 계속'; clearInterval(timer); } else { t0 = Date.now(); run = true; cBtn.textContent = '시계 멈춤'; timer = setInterval(tick, 500); } tick(); });
+  document.getElementById('nClockReset').addEventListener('click', () => { acc = 0; t0 = Date.now(); tick(); });
+}
+addEventListener('keydown', e => { if (isNotes || e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'p' || e.key === 'P') { e.preventDefault(); togglePanel(); } if (e.key === 'Escape' && !panel.hidden) togglePanel(false); });
+</script>
+</body>
+</html>
